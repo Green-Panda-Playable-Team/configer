@@ -4,57 +4,60 @@
  * @license      {@link https://legal.ubi.com/privacypolicy/en-INTL}
  */
 
-import Block from '../BlockPlugin';
-import GeneralBlock from './GeneralBlock';
-
-export default class DividerBlock extends GeneralBlock 
-{
-    // constructor(id, obj) 
-    // {
-    //     super(id, obj);
-    // }
-
-    apply() 
-    {
-        super.apply();
-
-        if (this.title) 
-        {
-            this.obj.title = this.obj.title || this.obj.msg || "";
-            this.title.innerText = this.obj.title;
+import Block from "../BlockPlugin";
+import GeneralBlock from "./GeneralBlock";
+/**
+ * @function
+ * @name divider
+ * @description This type of option is intended for logical separating different sets of other options.
+ * @param {string} title - information message of your divider, if you don't specify this parameter, HTML Builder will build only horizontal line.
+ * 
+ * @example 
+        ENDCARD: {
+            type: "divider",
+            title: "End Card options"
         }
-    }
+ */
+export default class DividerBlock extends GeneralBlock {
+	// constructor(id, obj)
+	// {
+	//     super(id, obj);
+	// }
 
-    build() 
-    {
-        super.build();
+	apply() {
+		super.apply();
 
-        const { obj, html, id } = this;
+		if (this.title) {
+			this.obj.title = this.obj.title || this.obj.msg || "";
+			this.title.innerText = this.obj.title;
+		}
+	}
 
-        obj.title = obj.title || obj.msg;
+	build() {
+		super.build();
 
-        if (obj.title && obj.title.length > 0) 
-        {
-            html.classList.add("cfger-divider-block");
+		const { obj, html, id } = this;
 
-            var label = document.createElement("label");
-            label.id = id;
-            label.innerText = obj.title;
-            this.title = label;
-            html.appendChild(label);
-        } 
-        else 
-        {
-            var hr = document.createElement("hr");
-            hr.id = id;
-            html.appendChild(hr);
-        }
-    }
+		obj.title = obj.title || obj.msg;
 
-    static getType() 
-    {
-        return 'divider';
-    }
+		if (obj.title && obj.title.length > 0) {
+			html.classList.add("cfger-divider-block");
+
+			var label = document.createElement("label");
+			label.id = id;
+			label.innerText = obj.title;
+			this.title = label;
+			html.appendChild(label);
+		} else {
+			var hr = document.createElement("hr");
+			hr.id = id;
+			html.appendChild(hr);
+		}
+	}
+
+	static getType() {
+		return "divider";
+	}
 }
 
-Block.register('divider', DividerBlock);
+Block.register("divider", DividerBlock);

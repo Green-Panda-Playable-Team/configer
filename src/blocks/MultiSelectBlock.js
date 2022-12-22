@@ -4,194 +4,200 @@
  * @license      {@link https://legal.ubi.com/privacypolicy/en-INTL}
  */
 
-import Block from '../BlockPlugin';
-import OptionBlock from './OptionBlock';
+import Block from "../BlockPlugin";
+import OptionBlock from "./OptionBlock";
 // import Preview from './Preview';
+/**
+ * @function
+ * @name multiselect
+ * @description This type of option is intended for specifying of multi select field for the user. Users can select only unique values from the specific list of options.
+ * @param {string} title - label that will be show next to the option
+ * @param {string} description - brief description of options, that will be shown when user hover over option
+ * @param {Array} value - default values of your multi select option.
+ * @param {Array} options - set of options for your select field.
+ * @param {string[]} labels - set of human readable labels for each option. Number of labels must be equal to the number of options..
+ * @param {Function} onChange - function that will be called when the user changes value of the option
+ * 
+ * @example 
+ * TOP_STYLES: {
 
-export default class MultiSelectBlock extends OptionBlock 
-{
-    // constructor(id, obj) 
-    // {
-    //     super(id, obj);
-    // }
+   type: "multiselect",
 
-    build()
-    {
-        super.build();
+   title: "Top styles",
 
-        var obj = this.obj;
+   value: ["simple"],
 
-        obj.options = obj.options || ["none"]
-        obj.labels = obj.labels || []
-        obj.value = (typeof obj.value === "undefined" ? [obj.options[0]] : obj.value);
+   options: ["classic", "simple"],
 
-        var isNumbers = true;
-        for (var i in obj.options) 
-        {
-            if (typeof obj.options[i] !== "number") 
-            {
-                isNumbers = false;
-                break;
-            }
-        }
+   labels: ["Classic", "Simple"],
 
-        this.isNumbers = isNumbers;
+   onChange: function ( value ) {
 
-        var input = document.createElement("select");
-        input.id = this.id;
+    console.log( value )
 
-        var size = this.size = Math.min(obj.size || 10, obj.options.length);
+    console.log( this.selectedTexts )
 
-        input.setAttribute("multiple", "");
-        input.setAttribute("size", size);
-        input.style.height = "100%";
-        input.className = "custom-select custom-select-sm";
+   }
 
-        this.selectedTexts = obj.selectedTexts = [];
-        this.selectedIndexes = obj.selectedIndexes = [];
+}
+ */
+export default class MultiSelectBlock extends OptionBlock {
+	// constructor(id, obj)
+	// {
+	//     super(id, obj);
+	// }
 
-        for (var t in obj.options) 
-        {
-            var value = obj.options[t];
-            var text = obj.labels[t] || value;
+	build() {
+		super.build();
 
-            var option = document.createElement("option");
-            option.value = value;
-            option.innerText = text;
+		var obj = this.obj;
 
-            input.appendChild(option)
-        }
+		obj.options = obj.options || ["none"];
+		obj.labels = obj.labels || [];
+		obj.value =
+			typeof obj.value === "undefined" ? [obj.options[0]] : obj.value;
 
-        this.input = input;
+		var isNumbers = true;
+		for (var i in obj.options) {
+			if (typeof obj.options[i] !== "number") {
+				isNumbers = false;
+				break;
+			}
+		}
 
-        this.html.appendChild(input);
+		this.isNumbers = isNumbers;
 
-        //this.preview = new Preview(this);
+		var input = document.createElement("select");
+		input.id = this.id;
 
-        var _this = this;
+		var size = (this.size = Math.min(obj.size || 10, obj.options.length));
 
-        function change() 
-        {
-            var values = [];
-            var selectedOptions = this.selectedOptions;
+		input.setAttribute("multiple", "");
+		input.setAttribute("size", size);
+		input.style.height = "100%";
+		input.className = "custom-select custom-select-sm";
 
-            for (var i = 0; i < selectedOptions.length; i++) 
-            {
-                if (isNumbers) 
-                {
-                    values.push(Number(selectedOptions[i].value))
-                } 
-                else 
-                {
-                    values.push(selectedOptions[i].value)
-                }
-            }
+		this.selectedTexts = obj.selectedTexts = [];
+		this.selectedIndexes = obj.selectedIndexes = [];
 
-            _this.change(values, true);
-        }
+		for (var t in obj.options) {
+			var value = obj.options[t];
+			var text = obj.labels[t] || value;
 
-        input.onchange = change;
-    }
+			var option = document.createElement("option");
+			option.value = value;
+			option.innerText = text;
 
-    applyValues() 
-    {
-        var options = this.input.options;
+			input.appendChild(option);
+		}
 
-        var val;
+		this.input = input;
 
-        var wasChanged = false;
+		this.html.appendChild(input);
 
-        this.selectedTexts = [];
-        this.selectedIndexes = [];
+		//this.preview = new Preview(this);
 
-        for (var i = 0; i < options.length; i++) 
-        {
-            if (this.isNumbers) 
-            {
-                val = Number(options[i].value);
-            }
-            else 
-            {
-                val = options[i].value;
-            }
+		var _this = this;
 
-            if (this.obj.value.indexOf(val) > -1) 
-            {
-                this.selectedIndexes.push(i);
-                this.selectedTexts.push(options[i].innerText);
+		function change() {
+			var values = [];
+			var selectedOptions = this.selectedOptions;
 
-                if (!options[i].selected) 
-                {
-                    options[i].selected = true;
-                    wasChanged = true;
-                }
-            } 
-            else 
-            {
-                if (options[i].selected) 
-                {
-                    options[i].selected = false;
-                    wasChanged = true;
-                }
-            }
-        }
+			for (var i = 0; i < selectedOptions.length; i++) {
+				if (isNumbers) {
+					values.push(Number(selectedOptions[i].value));
+				} else {
+					values.push(selectedOptions[i].value);
+				}
+			}
 
-        this.obj.selectedTexts = this.selectedTexts
-        this.obj.selectedIndexes = this.selectedIndexes;
+			_this.change(values, true);
+		}
 
-        return wasChanged;
-    }
+		input.onchange = change;
+	}
 
-    change(value, callCallback) 
-    {
-        var changed = false;
+	applyValues() {
+		var options = this.input.options;
 
-        // var prevValues = this.input.selectedOptions;
+		var val;
 
-        if (value !== undefined && Array.isArray(value)) 
-        {
-            if (this.obj.value !== value) 
-            {
-                changed = true;
-            }
+		var wasChanged = false;
 
-            this.obj.value = value.slice(0);
-        }
+		this.selectedTexts = [];
+		this.selectedIndexes = [];
 
-        for (var i = 0; i < this.obj.value.length; i++) 
-        {
-            if (this.obj.options.indexOf(this.obj.value[i]) === -1) 
-            {
-                this.obj.value.splice(i, 1);
-                i--;
-            }
-        }
-    
-        if (this.defaultValue === undefined) this.defaultValue = this.obj.value.slice(0);
+		for (var i = 0; i < options.length; i++) {
+			if (this.isNumbers) {
+				val = Number(options[i].value);
+			} else {
+				val = options[i].value;
+			}
 
-        if (this.applyValues() || changed) 
-        {
-            changed = true;
-            this.obj.changed = true;
-            
-            if (this.preview) 
-            {
-                this.preview.apply();
-            }
-        }
+			if (this.obj.value.indexOf(val) > -1) {
+				this.selectedIndexes.push(i);
+				this.selectedTexts.push(options[i].innerText);
 
-        if (changed && callCallback) 
-        {
-            this.onChange(this.obj.value);
-        }
+				if (!options[i].selected) {
+					options[i].selected = true;
+					wasChanged = true;
+				}
+			} else {
+				if (options[i].selected) {
+					options[i].selected = false;
+					wasChanged = true;
+				}
+			}
+		}
 
-        return changed;
-    }
+		this.obj.selectedTexts = this.selectedTexts;
+		this.obj.selectedIndexes = this.selectedIndexes;
 
-    static getType() 
-    {
-        return 'multiselect';
-    }
+		return wasChanged;
+	}
+
+	change(value, callCallback) {
+		var changed = false;
+
+		// var prevValues = this.input.selectedOptions;
+
+		if (value !== undefined && Array.isArray(value)) {
+			if (this.obj.value !== value) {
+				changed = true;
+			}
+
+			this.obj.value = value.slice(0);
+		}
+
+		for (var i = 0; i < this.obj.value.length; i++) {
+			if (this.obj.options.indexOf(this.obj.value[i]) === -1) {
+				this.obj.value.splice(i, 1);
+				i--;
+			}
+		}
+
+		if (this.defaultValue === undefined)
+			this.defaultValue = this.obj.value.slice(0);
+
+		if (this.applyValues() || changed) {
+			changed = true;
+			this.obj.changed = true;
+
+			if (this.preview) {
+				this.preview.apply();
+			}
+		}
+
+		if (changed && callCallback) {
+			this.onChange(this.obj.value);
+		}
+
+		return changed;
+	}
+
+	static getType() {
+		return "multiselect";
+	}
 }
 
-Block.register('multiselect', MultiSelectBlock, 'value');
+Block.register("multiselect", MultiSelectBlock, "value");

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>src/blocks/ColorBlock.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Blocks</h3><ul><li><a href="global.html#banner">banner</a></li><li><a href="global.html#block">block</a></li><li><a href="global.html#buildNav">buildNav</a></li><li><a href="global.html#button">button</a></li><li><a href="global.html#checkbox">checkbox</a></li><li><a href="global.html#color">color</a></li><li><a href="global.html#data_set">data_set</a></li><li><a href="global.html#date">date</a></li><li><a href="global.html#datetime">datetime</a></li><li><a href="global.html#divider">divider</a></li><li><a href="global.html#file">file</a></li><li><a href="global.html#font">font</a></li><li><a href="global.html#gif_to_spritesheet">gif_to_spritesheet</a></li><li><a href="global.html#image">image</a></li><li><a href="global.html#list">list</a></li><li><a href="global.html#multiselect">multiselect</a></li><li><a href="global.html#number">number</a></li><li><a href="global.html#publish">publish</a></li><li><a href="global.html#range">range</a></li><li><a href="global.html#range_set">range_set</a></li><li><a href="global.html#select">select</a></li><li><a href="global.html#text">text</a></li><li><a href="global.html#textarea">textarea</a></li><li><a href="global.html#title">title</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">src/blocks/ColorBlock.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @author       Peter Hutsul &lt;peter@greenpandagames.com>
+ * @copyright    2021 GREEN PANDA GAMES
+ * @license      {@link https://legal.ubi.com/privacypolicy/en-INTL}
+ */
+
+import Block from "../BlockPlugin";
+import OptionBlock from "./OptionBlock";
+
+/**
+ * @function
+ * @name color
+ * @description This type of option is intended for specifying of color field for user
+ * @param {string} title - label that will be show next to the option
+ * @param {string} description - brief description of options, that will be shown when user hover over option
+ * @param {boolean|object} value - default value that could be a color or an object with color and alpha properties.
+ * @param {Function} onChange - function that will be called when the user changes value of the option
+ * 
+ * @example 
+BUTTON_COLOR: {
+
+	type: "color",
+
+	title: "Button color",
+
+	value: "#45a378",
+
+	onChange: function ( value ) {
+
+		console.log( value )
+
+	}
+
+}
+
+================================
+
+BUTTON_COLOR_ALPHA: {
+
+	type: "color",
+
+	title: "Button color",
+
+	value: {color: "#45a378", alpha: 0.5},
+
+	onChange: function ( value ) {
+
+		console.log( value )
+
+	}
+
+}
+ */
+export default class ColorBlock extends OptionBlock {
+	// constructor(id, obj)
+	// {
+	//     super(id, obj);
+	// }
+
+	buildColor() {
+		var _this = this;
+
+		if (this.obj.value === undefined) this.obj.value = "#000000";
+
+		var input = document.createElement("input");
+		input.id = this.id;
+		input.type = this.obj.type;
+		input.className = "form-control";
+		input.value = this.obj.value;
+		this.input = input;
+
+		this.html.appendChild(input);
+
+		function change() {
+			_this.changeColor(this.value, true);
+		}
+
+		if (this.obj.oninput) {
+			input.oninput = change;
+		} else {
+			input.onchange = change;
+		}
+	}
+
+	changeColor(value, callCallback) {
+		var changed = false;
+
+		var prevValue = this.input.value;
+
+		if (value !== undefined) {
+			if (this.obj.value !== value) {
+				changed = true;
+			}
+
+			this.obj.value = value;
+		}
+
+		if (this.defaultValue === undefined) this.defaultValue = this.obj.value;
+		this.input.value = "" + this.obj.value;
+
+		if (this.input.value !== prevValue || changed) {
+			changed = true;
+			this.obj.changed = true;
+		}
+
+		if (changed &amp;&amp; callCallback) {
+			this.onChange(this.obj.value);
+		}
+
+		return changed;
+	}
+
+	changeColorAlpha(value, callCallback) {
+		var changed = false;
+
+		var prevValue = {
+			color: this.colorInput.value,
+			alpha: this.alphaInput.value,
+		};
+
+		if (value !== undefined) {
+			if (this.obj.value !== value) {
+				changed = true;
+			}
+
+			this.obj.value = value;
+		}
+
+		if (this.defaultValue === undefined) this.defaultValue = this.obj.value;
+
+		this.colorInput.value = "" + this.obj.value.color;
+
+		this.alphaInput.value = this.obj.value.alpha;
+
+		this.colorInput.style.opacity = this.alphaInput.value;
+
+		if (
+			this.colorInput.value !== prevValue.color ||
+			this.alphaInput.value !== prevValue.alpha ||
+			changed
+		) {
+			changed = true;
+			this.obj.changed = true;
+		}
+
+		if (changed &amp;&amp; callCallback) {
+			this.onChange(this.obj.value);
+		}
+
+		return changed;
+	}
+
+	buildColorAlpha() {
+		if (typeof this.obj.value !== "object") {
+			this.obj.value = {
+				color: "#000000",
+				alpha: 1,
+			};
+		}
+
+		if (this.obj.color === undefined) {
+			this.obj.color = "#000000";
+		}
+		if (this.obj.alpha === undefined) {
+			this.obj.alpha = "#000000";
+		}
+
+		var container = document.createElement("div");
+		container.className = "color-alpha-input-container";
+
+		this.html.appendChild(container);
+
+		var input_block = document.createElement("div");
+		input_block.className = "color-alpha-input-color-border";
+
+		var input = (this.colorInput = document.createElement("input"));
+		input.id = this.id + "_color_input";
+		input.type = this.obj.type;
+		input.value = this.obj.value.color;
+		input.className = "form-control color-alpha-input-color";
+
+		input_block.appendChild(input);
+		container.appendChild(input_block);
+
+		var alpha_btn = document.createElement("div");
+		alpha_btn.className = "color-alpha-btn config-drowdown-btn";
+		var alpha_icon = document.createElement("i");
+		alpha_icon.className = "far fa-eye";
+		alpha_btn.appendChild(alpha_icon);
+
+		var container_drowdown = document.createElement("div");
+		container_drowdown.append(alpha_btn);
+
+		var popover = document.createElement("div");
+		popover.classList.add("config-popover-container");
+
+		var config_block = document.createElement("div");
+
+		config_block.className = "config-popover-block alpha-input-block";
+
+		var alpha_label = document.createElement("label");
+		alpha_label.className = "form-label";
+		alpha_label.htmlFor = this.id + "_color_alpha_input";
+		alpha_label.innerText = "Color transparency";
+		var alpha_input = (this.alphaInput = document.createElement("input"));
+		alpha_input.value = this.obj.value.alpha;
+
+		alpha_input.className = "custom-range";
+		alpha_input.id = this.id + "_color_alpha_input";
+		alpha_input.min = 0;
+		alpha_input.max = 1;
+		alpha_input.step = 0.01;
+		alpha_input.type = "range";
+
+		var alpha_input_container = document.createElement("div");
+
+		alpha_input_container.style.display = "flex";
+		alpha_input_container.style.flexDirection = "column";
+
+		alpha_input_container.style.padding = "0 10px";
+		alpha_input_container.appendChild(alpha_input);
+
+		config_block.appendChild(alpha_label);
+
+		config_block.appendChild(alpha_input_container);
+
+		popover.append(config_block);
+
+		var backdrop = (this.backdrop = document.createElement("div"));
+		backdrop.className = "block-popover-backdrop";
+
+		container.appendChild(backdrop);
+
+		var isOpen = false;
+
+		alpha_btn.show = () => {
+			isOpen = true;
+			alpha_btn.classList.add("active");
+			backdrop.classList.add("active");
+			config_block.classList.add("active");
+		};
+		alpha_btn.hide = () => {
+			isOpen = false;
+			alpha_btn.classList.remove("active");
+			backdrop.classList.remove("active");
+			config_block.classList.remove("active");
+		};
+
+		backdrop.onclick = () => alpha_btn.hide();
+
+		alpha_btn.onclick = (e) => {
+			e.stopPropagation();
+
+			if (isOpen) alpha_btn.hide();
+			else alpha_btn.show();
+		};
+
+		container_drowdown.append(popover);
+
+		container.appendChild(container_drowdown);
+
+		var _this = this;
+
+		function changesColor() {
+			_this.changeColorAlpha(
+				{ color: this.value, alpha: _this.alphaInput.value },
+				true
+			);
+		}
+		function changesAlpha() {
+			_this.changeColorAlpha(
+				{ color: _this.colorInput.value, alpha: this.value },
+				true
+			);
+		}
+
+		if (this.obj.oninput) {
+			this.alphaInput.oninput = changesAlpha;
+			this.colorInput.oninput = changesColor;
+		} else {
+			this.alphaInput.onchange = changesAlpha;
+			this.colorInput.onchange = changesColor;
+		}
+	}
+
+	build() {
+		super.build();
+		if (typeof this.obj.value === "object") {
+			this.buildColorAlpha();
+		} else {
+			this.buildColor();
+			this.input.className = "form-control form-control-sm";
+			this.input.style.width = "80px";
+		}
+
+		// this.input.style.padding = "0px 2px";
+	}
+
+	static getType() {
+		return "color";
+	}
+}
+
+Block.register("color", ColorBlock, "value");
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.0</a> on Thu Dec 15 2022 15:32:52 GMT+0200 (Eastern European Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

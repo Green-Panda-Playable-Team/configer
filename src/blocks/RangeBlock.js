@@ -4,166 +4,182 @@
  * @license      {@link https://legal.ubi.com/privacypolicy/en-INTL}
  */
 
-import Block from '../BlockPlugin';
-import OptionBlock from './OptionBlock';
-import Indicator from './Indicator';
+import Block from "../BlockPlugin";
+import OptionBlock from "./OptionBlock";
+import Indicator from "./Indicator";
 
-function snap(obj) 
-{
-    if (obj.snap && obj.snap.length > 0) 
-    {
-        obj.snap_threshold = obj.snap_threshold || obj.snap_treshhold 
-        obj.snap_threshold = obj.snap_threshold || 0
+function snap(obj) {
+	if (obj.snap && obj.snap.length > 0) {
+		obj.snap_threshold = obj.snap_threshold || obj.snap_treshhold;
+		obj.snap_threshold = obj.snap_threshold || 0;
 
-        var snpValue = Number(obj.value); 
+		var snpValue = Number(obj.value);
 
-        for( var s in obj.snap )
-        { 
-            if( (snpValue > (obj.snap[s] - obj.snap_threshold)) && (snpValue < (obj.snap[s] + obj.snap_threshold)) ) 
-            { 
-                obj.value = obj.snap[s]; 
-                break;
-            }
-        }
-    }
+		for (var s in obj.snap) {
+			if (
+				snpValue > obj.snap[s] - obj.snap_threshold &&
+				snpValue < obj.snap[s] + obj.snap_threshold
+			) {
+				obj.value = obj.snap[s];
+				break;
+			}
+		}
+	}
 }
 
+/**
+ * @function
+ * @name range
+ * @description This type of option is intended for specifying of range field for user (it is view for number type of option)
+ * @param {string} title - label that will be show next to the option
+ * @param {string} description - brief description of options, that will be shown when user hover over option
+ * @param {number} value - default value of your range option.
+ * @param {number} min - minimum value that user can set.
+ * @param {number} max - maximum value that user can set.
+ * @param {number} step - step of increasing or decreasing number.
+ * @param {number[]} snap - set of numbers to specify points to snap input cursor to these points.
+ * @param {number} snap_threshold - threshold of value to snap it to set point.
+ * @param {Function} onChange - function that will be called when the user changes value of the option
+ * 
+ * @example 
+LOGO_POSITION: {
 
-export default class RangeBlock extends OptionBlock 
-{
-    // constructor(id, obj) 
-    // {
-    //     super(id, obj);
-    // }
+   type: "range",
 
-    build() 
-    {
-        super.build();
+   title: "Position of logo",
 
-        var obj = this.obj;
+   value: 34,
 
-        obj.min = obj.min || 0;
-        obj.max = obj.max || 0;
-        obj.step = obj.step || 1;
-        obj.value = obj.value || 0;
+   min: -700,
 
-        var input = document.createElement("input");
-        input.id = this.id;
-        input.type = obj.type;
-        input.className = "custom-range";
-        input.title = "from " + obj.min + " to " + obj.max;
+   max: 700,
 
-        input.min = obj.min
+   step: 1,
 
-        input.max = obj.max
+   snap: [0, -100, 100],
 
-        input.step = obj.step
+   snap_threshold: 10,
 
-        input.value = obj.value || 0
+   onChange: function ( value ) {
 
-        this.input = input;
+      console.log( value )
 
-        this.html.appendChild(input);
+   }
 
-        var _this = this;
+}
+ */
+export default class RangeBlock extends OptionBlock {
+	// constructor(id, obj)
+	// {
+	//     super(id, obj);
+	// }
 
-        function change() 
-        {
-            _this.change(Number(this.value), true);
-        }
+	build() {
+		super.build();
 
-        if (obj.oninput === false) 
-        {
-            input.onchange = change;
-        } 
-        else 
-        {
-            input.oninput = change;
-        }
+		var obj = this.obj;
 
-        this.indicator = new Indicator(this);
-    }
+		obj.min = obj.min || 0;
+		obj.max = obj.max || 0;
+		obj.step = obj.step || 1;
+		obj.value = obj.value || 0;
 
-    change(value, callCallback) 
-    {
-        var changed = false;
+		var input = document.createElement("input");
+		input.id = this.id;
+		input.type = obj.type;
+		input.className = "custom-range";
+		input.title = "from " + obj.min + " to " + obj.max;
 
-        var prevValue = this.input.value;
+		input.min = obj.min;
 
-        var obj = this.obj;
+		input.max = obj.max;
 
-        if (value !== undefined) 
-        {
-            if (!obj.oninput) 
-            {
-                if (typeof obj.min === 'number' && value < obj.min) 
-                {
-                    value = obj.min;
-                } 
-                else if (typeof obj.max === 'number' && value > obj.max) 
-                {
-                    value = obj.max;
-                }
-            }
+		input.step = obj.step;
 
-            if (obj.value !== value) 
-            {
-                changed = true;
-            }
+		input.value = obj.value || 0;
 
-            obj.value = value;
+		this.input = input;
 
-            snap(obj);
-        }
+		this.html.appendChild(input);
 
-        if (obj.min !== this.input.min)
-            this.input.min = "" + obj.min;
+		var _this = this;
 
-        if (obj.max !== this.input.max)
-            this.input.max = "" + obj.max;
+		function change() {
+			_this.change(Number(this.value), true);
+		}
 
-        if (obj.step !== this.input.step)
-            this.input.step = "" + obj.step;
+		if (obj.oninput === false) {
+			input.onchange = change;
+		} else {
+			input.oninput = change;
+		}
 
-        this.input.value = "" + obj.value;
+		this.indicator = new Indicator(this);
+	}
 
-        if (obj.max === obj.min) 
-        {
-            this.input.classList.add("cfger-disabled");
-        } 
-        else 
-        {
-            this.input.classList.remove("cfger-disabled");
-        }
+	change(value, callCallback) {
+		var changed = false;
 
-        if (this.input.value !== obj.value) 
-        {
-            obj.value = Number(this.input.value);
-        }
+		var prevValue = this.input.value;
 
-        if (this.defaultValue === undefined) this.defaultValue = obj.value;
-        this.input.title = "from " + obj.min + " to " + obj.max;
-        this.input.value = "" + obj.value;
-        this.indicator && this.indicator.apply();
+		var obj = this.obj;
 
-        if (this.input.value !== prevValue || changed) 
-        {
-            changed = true;
-            obj.changed = true;
-        }
+		if (value !== undefined) {
+			if (!obj.oninput) {
+				if (typeof obj.min === "number" && value < obj.min) {
+					value = obj.min;
+				} else if (typeof obj.max === "number" && value > obj.max) {
+					value = obj.max;
+				}
+			}
 
-        if (changed && callCallback) 
-        {
-            this.onChange(obj.value);
-        }
+			if (obj.value !== value) {
+				changed = true;
+			}
 
-        return changed;
-    }
+			obj.value = value;
 
-    static getType() 
-    {
-        return 'range';
-    }
+			snap(obj);
+		}
+
+		if (obj.min !== this.input.min) this.input.min = "" + obj.min;
+
+		if (obj.max !== this.input.max) this.input.max = "" + obj.max;
+
+		if (obj.step !== this.input.step) this.input.step = "" + obj.step;
+
+		this.input.value = "" + obj.value;
+
+		if (obj.max === obj.min) {
+			this.input.classList.add("cfger-disabled");
+		} else {
+			this.input.classList.remove("cfger-disabled");
+		}
+
+		if (this.input.value !== obj.value) {
+			obj.value = Number(this.input.value);
+		}
+
+		if (this.defaultValue === undefined) this.defaultValue = obj.value;
+		this.input.title = "from " + obj.min + " to " + obj.max;
+		this.input.value = "" + obj.value;
+		this.indicator && this.indicator.apply();
+
+		if (this.input.value !== prevValue || changed) {
+			changed = true;
+			obj.changed = true;
+		}
+
+		if (changed && callCallback) {
+			this.onChange(obj.value);
+		}
+
+		return changed;
+	}
+
+	static getType() {
+		return "range";
+	}
 }
 
-Block.register('range', RangeBlock, 'value');
+Block.register("range", RangeBlock, "value");

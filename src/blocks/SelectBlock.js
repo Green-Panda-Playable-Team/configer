@@ -4,150 +4,176 @@
  * @license      {@link https://legal.ubi.com/privacypolicy/en-INTL}
  */
 
-import Block from '../BlockPlugin';
-import OptionBlock from './OptionBlock';
-import Preview from './Preview';
-import ExpandedPreview from './ExpandedPreview';
+import Block from "../BlockPlugin";
+import OptionBlock from "./OptionBlock";
+import Preview from "./Preview";
+import ExpandedPreview from "./ExpandedPreview";
 
-export default class SelectBlock extends OptionBlock 
-{
-    // constructor(id, obj) 
-    // {
-    //     super(id, obj);
-    // }
+/**
+ * @function
+ * @name select
+ * @description This type of option is intended for specifying of select field for user
+ * @param {string} title - label that will be show next to the option
+ * @param {string} description - brief description of options, that will be shown when user hover over option
+ * @param value - default value of your select option.
+ * @param {Array} options - set of options for your select field.
+ * @param {string[]} labels - set of human readable labels for each option. Number of labels must be equal to the number of options..
+ * @param {string[]} preview - you can specify this parameter to preview each of your options as an image. This is a set of images presented as base64 code, or link to image.
+ * @param {number} preview_width - this is the maximum width of your preview image.
+ * @param {number} preview_height - this is the maximum height of your preview image.
+ * @param {Function} onChange - function that will be called when the user changes value of the option
+ * 
+ * @example 
+ * TOP_STYLE: {
 
-    build() 
-    {
-        super.build();
+   type: "select",
 
-        var obj = this.obj;
+   title: "Top style",
 
-        obj.options = obj.options || ["none"]
-        obj.labels = obj.labels || []
-        obj.value = (typeof obj.value === "undefined" ? obj.options[0] : obj.value);
+   value: "simple",
 
-        var isNumbers = true;
-        for (var i in obj.options) 
-        {
-            if (typeof obj.options[i] !== "number") 
-            {
-                isNumbers = false;
-                break;
-            }
-        }
+   options: ["classic", "simple"],
 
-        this.isNumbers = isNumbers;
+   labels: ["Classic", "Simple"],
 
-        var input = document.createElement("select");
-        input.id = this.id;
-        input.value = obj.value;
-        input.className = "form-select form-select-sm";
+   preview: ["base64...", "base64..."],
 
-        for (var t in obj.options) 
-        {
-            var value = obj.options[t];
-            var text = obj.labels[t] || value;
+   preview_width: 100,
 
-            var option = document.createElement("option");
-            option.value = value;
-            option.innerText = text;
+   onChange: function ( value ) {
 
-            if (value === obj.value) 
-            {
-                option.selected = true
-                this.selectedText = obj.selectedText = text;
-                this.selectedIndex = obj.selectedIndex = Number(t);
-            }
+    console.log( value )
 
-            input.appendChild(option)
-        }
+    console.log( this.selectedText )
 
-        this.input = input;
+    console.log( this.selectedIndex )
 
-        this.html.appendChild(input);
+   }
 
-        this.preview = new Preview(this);
+}
+ */
+export default class SelectBlock extends OptionBlock {
+	// constructor(id, obj)
+	// {
+	//     super(id, obj);
+	// }
 
-        if (obj.preview) 
-        {
-            this.expanded = new ExpandedPreview(this);
-        }
+	build() {
+		super.build();
 
-        var _this = this;
+		var obj = this.obj;
 
-        function change() 
-        {
-            var value = this.value;
+		obj.options = obj.options || ["none"];
+		obj.labels = obj.labels || [];
+		obj.value =
+			typeof obj.value === "undefined" ? obj.options[0] : obj.value;
 
-            if (isNumbers) 
-            {
-                value = Number(this.value)
-            }
+		var isNumbers = true;
+		for (var i in obj.options) {
+			if (typeof obj.options[i] !== "number") {
+				isNumbers = false;
+				break;
+			}
+		}
 
-            _this.change(value, true);
-        }
+		this.isNumbers = isNumbers;
 
-        input.onchange = change;
-    }
+		var input = document.createElement("select");
+		input.id = this.id;
+		input.value = obj.value;
+		input.className = "form-select form-select-sm";
 
-    change(value, callCallback) 
-    {
-        var changed = false;
+		for (var t in obj.options) {
+			var value = obj.options[t];
+			var text = obj.labels[t] || value;
 
-        var prevValue = this.input.value;
+			var option = document.createElement("option");
+			option.value = value;
+			option.innerText = text;
 
-        if (value !== undefined) 
-        {
-            if (this.obj.value !== value) 
-            {
-                changed = true;
-            }
+			if (value === obj.value) {
+				option.selected = true;
+				this.selectedText = obj.selectedText = text;
+				this.selectedIndex = obj.selectedIndex = Number(t);
+			}
 
-            this.obj.value = value;
-        }
+			input.appendChild(option);
+		}
 
-        var valueIndex = this.obj.options.indexOf(this.obj.value);
+		this.input = input;
 
-        if (valueIndex === -1) 
-        {
-            valueIndex = 0;
-            this.obj.value = this.obj.options[valueIndex];
-        }
+		this.html.appendChild(input);
 
-        this.obj.selectedIndex = valueIndex;
-        this.obj.selectedText = this.input.options[valueIndex].innerText;
+		this.preview = new Preview(this);
 
-        if (this.defaultValue === undefined) this.defaultValue = this.obj.value;
-        this.input.value = "" + this.obj.value;
+		if (obj.preview) {
+			this.expanded = new ExpandedPreview(this);
+		}
 
-        if (this.input.value !== prevValue || changed) 
-        {
-            changed = true;
-            this.obj.changed = true;
-            
-            if (this.preview) 
-            {
-                this.preview.apply();
-            }
-            
-            if (this.expanded) 
-            {
-                this.expanded.apply();
-            }
-        }
+		var _this = this;
 
-        if (changed && callCallback) 
-        {
-            this.onChange(this.obj.value);
-        }
+		function change() {
+			var value = this.value;
 
-        return changed;
-    }
+			if (isNumbers) {
+				value = Number(this.value);
+			}
 
-    static getType() 
-    {
-        return 'select';
-    }
+			_this.change(value, true);
+		}
+
+		input.onchange = change;
+	}
+
+	change(value, callCallback) {
+		var changed = false;
+
+		var prevValue = this.input.value;
+
+		if (value !== undefined) {
+			if (this.obj.value !== value) {
+				changed = true;
+			}
+
+			this.obj.value = value;
+		}
+
+		var valueIndex = this.obj.options.indexOf(this.obj.value);
+
+		if (valueIndex === -1) {
+			valueIndex = 0;
+			this.obj.value = this.obj.options[valueIndex];
+		}
+
+		this.obj.selectedIndex = valueIndex;
+		this.obj.selectedText = this.input.options[valueIndex].innerText;
+
+		if (this.defaultValue === undefined) this.defaultValue = this.obj.value;
+		this.input.value = "" + this.obj.value;
+
+		if (this.input.value !== prevValue || changed) {
+			changed = true;
+			this.obj.changed = true;
+
+			if (this.preview) {
+				this.preview.apply();
+			}
+
+			if (this.expanded) {
+				this.expanded.apply();
+			}
+		}
+
+		if (changed && callCallback) {
+			this.onChange(this.obj.value);
+		}
+
+		return changed;
+	}
+
+	static getType() {
+		return "select";
+	}
 }
 
-Block.register('select', SelectBlock, 'value');
+Block.register("select", SelectBlock, "value");

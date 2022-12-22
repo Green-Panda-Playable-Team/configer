@@ -7,6 +7,65 @@
 import Block from "../BlockPlugin";
 import OptionBlock from "./OptionBlock";
 
+/**
+ * @function
+ * @name font
+ * @description This complex type of option is intended for specifining <b>font styles</b> input field.
+ * @param {string} title - label that will be show next to the option
+ * @param {string} description - brief description of options, that will be shown when user hover over option
+ * @param {object} font - specifies list of available fonts with options and labels. 
+ * @param {object} weight - specifies list of available weights with options and labels. 
+ * @param {object} size - specifies <b>min, max, step</b> values for  <b>size</b> field. 
+ * @param {object} strokeWidth - specifies <b>min, max, step</b> values for <b>strokeWidth</b> field. 
+ * @param {Function} onChange - function that will be called when the user changes value of the option
+ * 
+ * @example 
+	TITLE_FONT: {
+
+		type: "font",
+
+		title: "Title style:",
+
+		font: {
+			options: ["Arial", "Arial Black", "Custom"]
+			labels: ["Font 1", "Font 2", "Font 3"]
+		},
+		weight: {
+			options: [400, 600, 700]
+			labels: ["Normal", "Bold", "Bolder"]
+		},
+		size: {
+			min: 1,
+			max: 30,
+			step: 1
+		},
+		strokeWidth: {
+			min: 0,
+			max: 5,
+			step: 1
+		},
+
+		value: {
+			size: 10,
+			font: "Arial",
+			weight: 600,
+			color: {
+				color: "#ff0000",
+				alpha: 0.5
+			},
+			strokeColor: "#00ff00",
+			strokeWidth: 2,
+		},
+
+
+		onChange: function ( value ) {
+
+			console.log( value )
+
+		}
+
+	}
+ */
 export default class FontBlock extends OptionBlock {
 	// constructor(id, obj)
 	// {

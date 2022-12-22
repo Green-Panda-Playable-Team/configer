@@ -7,6 +7,50 @@
 import Block from "../BlockPlugin";
 import OptionBlock from "./OptionBlock";
 
+/**
+ * @function
+ * @name color
+ * @description This type of option is intended for specifying of color field for user
+ * @param {string} title - label that will be show next to the option
+ * @param {string} description - brief description of options, that will be shown when user hover over option
+ * @param {boolean|object} value - default value that could be a color or an object with color and alpha properties.
+ * @param {Function} onChange - function that will be called when the user changes value of the option
+ * 
+ * @example 
+BUTTON_COLOR: {
+
+	type: "color",
+
+	title: "Button color",
+
+	value: "#45a378",
+
+	onChange: function ( value ) {
+
+		console.log( value )
+
+	}
+
+}
+
+================================
+
+BUTTON_COLOR_ALPHA: {
+
+	type: "color",
+
+	title: "Button color",
+
+	value: {color: "#45a378", alpha: 0.5},
+
+	onChange: function ( value ) {
+
+		console.log( value )
+
+	}
+
+}
+ */
 export default class ColorBlock extends OptionBlock {
 	// constructor(id, obj)
 	// {

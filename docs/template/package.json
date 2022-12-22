@@ -1,0 +1,67 @@
+{
+  "_from": "docdash",
+  "_id": "docdash@2.0.0",
+  "_inBundle": false,
+  "_integrity": "sha512-AxxZwrMLmiArEHJirdyZmW6YTBKxkd/Z5V9U2EU1crIMtpgoU/cH7Hnc9n1E0lzB1ZSam+VVMSnvlc+9+GUGVg==",
+  "_location": "/docdash",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "docdash",
+    "name": "docdash",
+    "escapedName": "docdash",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/docdash/-/docdash-2.0.0.tgz",
+  "_shasum": "1db24c934f9d4feb5576c638e8c061deb5ae1832",
+  "_spec": "docdash",
+  "_where": "C:\\Users\\vanya\\Desktop\\playable\\client\\src\\configer.local",
+  "author": {
+    "name": "Clement Moron",
+    "email": "clement.moron@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/clenemt/docdash/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "@jsdoc/salty": "^0.2.1"
+  },
+  "deprecated": false,
+  "description": "A clean, responsive documentation template theme for JSDoc 3 inspired by lodash and minami",
+  "devDependencies": {
+    "browser-sync": "latest",
+    "jsdoc": "latest",
+    "watch-run": "latest"
+  },
+  "files": [
+    "publish.js",
+    "static",
+    "tmpl"
+  ],
+  "homepage": "https://github.com/clenemt/docdash#readme",
+  "keywords": [
+    "jsdoc",
+    "template"
+  ],
+  "license": "Apache-2.0",
+  "main": "publish.js",
+  "name": "docdash",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clenemt/docdash.git"
+  },
+  "scripts": {
+    "sync": "browser-sync start -s ../fixtures-doc -f ../fixtures-doc --reload-delay 1000 --no-ui --no-notify",
+    "test": "jsdoc -c fixtures/fixtures.conf.json",
+    "watch": "watch-run -d 1000 -p tmpl/**,static/** \"npm run test\""
+  },
+  "version": "2.0.0"
+}

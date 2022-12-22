@@ -4,68 +4,100 @@
  * @license      {@link https://legal.ubi.com/privacypolicy/en-INTL}
  */
 
-import Block from '../BlockPlugin';
-import Container from './Container';
+import Block from "../BlockPlugin";
+import Container from "./Container";
+/**
+ * @function
+ * @name block
+ * @description This type of option is intended for specifining set of options grouped in a special block, that the user can hide / show.
+ * @param {string} title - label that will be show next to the option
+ * @param {string} description - brief description of options, that will be shown when user hover over option
+ * @param {string} value - object that contains another set of custom configer options.
+ * 
+ * @example 
+    ENDCARD_BLOCK: {
 
-export default class ItemsBlock extends Container {
+        type: "block",
 
-    constructor(id, obj) 
-    {
-        super(id, obj, false);
+        title: "End card config",
 
-        super.apply();
-    }
+        config: {
 
-    apply(callCallback) 
-    {
-        super.apply(callCallback);
+            LOGO_TEXT: {
 
-        this.children.forEach(function(child)
-        {
-            child.apply(callCallback);
-        });
-    }
+                type: "text",
 
-    build() 
-    {
-        super.build();
+                title: "Logo text",
 
-        var options = this.obj;
-        
-        if (this.obj.config && this.obj.type === "block") 
-        {
-            options = this.obj.config || {};
-        }
+                value: "Your win!"
 
-        for (var name in options) 
-        {
-            var obj = options[name];
+            },
 
-            if (typeof obj == "object" && obj.type) 
-            {
-                var blockClass = Block.get(obj.type);
+            END_NUM: {
 
-                var objView = new blockClass(this.id + "_" + name, obj);
+                type: "number",
 
-                this.children.push(objView);
+                title: "Logo number",
 
-                this.container.appendChild(objView.getHTML());
+                value: "Your win!",
+
+                onChange: function() {}
+
             }
+
         }
 
-        if (this.children.length === 0) 
-        {
-            const emptyListLabel = document.createElement("div");
-            emptyListLabel.className = "cfger-empty-list-label";
-            emptyListLabel.innerText = "No options here";
-            this.container.appendChild(emptyListLabel);
-        }
     }
+ */
+export default class ItemsBlock extends Container {
+	constructor(id, obj) {
+		super(id, obj, false);
 
-    static getType() 
-    {
-        return 'block';
-    }
+		super.apply();
+	}
+
+	apply(callCallback) {
+		super.apply(callCallback);
+
+		this.children.forEach(function (child) {
+			child.apply(callCallback);
+		});
+	}
+
+	build() {
+		super.build();
+
+		var options = this.obj;
+
+		if (this.obj.config && this.obj.type === "block") {
+			options = this.obj.config || {};
+		}
+
+		for (var name in options) {
+			var obj = options[name];
+
+			if (typeof obj == "object" && obj.type) {
+				var blockClass = Block.get(obj.type);
+
+				var objView = new blockClass(this.id + "_" + name, obj);
+
+				this.children.push(objView);
+
+				this.container.appendChild(objView.getHTML());
+			}
+		}
+
+		if (this.children.length === 0) {
+			const emptyListLabel = document.createElement("div");
+			emptyListLabel.className = "cfger-empty-list-label";
+			emptyListLabel.innerText = "No options here";
+			this.container.appendChild(emptyListLabel);
+		}
+	}
+
+	static getType() {
+		return "block";
+	}
 }
 
-Block.register('block', ItemsBlock);
+Block.register("block", ItemsBlock);

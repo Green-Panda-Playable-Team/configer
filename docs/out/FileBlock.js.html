@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>FileBlock.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Blocks</h3><ul><li><a href="global.html#banner">banner</a></li><li><a href="global.html#block">block</a></li><li><a href="global.html#button">button</a></li><li><a href="global.html#checkbox">checkbox</a></li><li><a href="global.html#color">color</a></li><li><a href="global.html#data_set">data_set</a></li><li><a href="global.html#date">date</a></li><li><a href="global.html#datetime">datetime</a></li><li><a href="global.html#divider">divider</a></li><li><a href="global.html#file">file</a></li><li><a href="global.html#font">font</a></li><li><a href="global.html#gif_to_spritesheet">gif_to_spritesheet</a></li><li><a href="global.html#image">image</a></li><li><a href="global.html#list">list</a></li><li><a href="global.html#multiselect">multiselect</a></li><li><a href="global.html#number">number</a></li><li><a href="global.html#range">range</a></li><li><a href="global.html#range_set">range_set</a></li><li><a href="global.html#select">select</a></li><li><a href="global.html#text">text</a></li><li><a href="global.html#textarea">textarea</a></li><li><a href="global.html#title">title</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">FileBlock.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @author       Peter Hutsul &lt;peter@greenpandagames.com>
+ * @copyright    2021 GREEN PANDA GAMES
+ * @license      {@link https://legal.ubi.com/privacypolicy/en-INTL}
+ */
+
+import Block from "../BlockPlugin";
+import OptionBlock from "./OptionBlock";
+
+/**
+ * @function
+ * @name file
+ * @description This type of option is intended for specifying of file input field for the user.
+ * @param {string} title - label that will be show next to the option
+ * @param {string} description - brief description of options, that will be shown when user hover over option
+ * @param {string} src - default file value, encoded into base64 code.
+ * @param {Function} onChange - function that will be called when the user changes value of the option
+ * 
+ * @example 
+    DATAFILE: {
+
+        type: "file",
+
+        title: "Some file",
+
+        src: "base64...",
+
+        onChange: function ( src ) {
+
+            console.log( src )
+
+        }
+
+    }
+ */
+export default class FileBlock extends OptionBlock {
+	static createButton(iconClass) {
+		var btn = document.createElement("div");
+		btn.classList.add("file-btn");
+		var icon = document.createElement("i");
+		icon.className = iconClass;
+		btn.appendChild(icon);
+		return btn;
+	}
+
+	static fileSize(image, isFileSize) {
+		var sizeInBytes = image.length;
+
+		if (isFileSize !== false) {
+			sizeInBytes = base64FileSize(image);
+		}
+
+		return sizeInBytes / 1000;
+	}
+
+	constructor(id, obj) {
+		super(id, obj);
+
+		obj.block.configure = this.configure.bind(this);
+		obj.block.fileChanged = this.fileChanged.bind(this);
+	}
+
+	_buildLimits() {
+		var _this = this;
+		var compressIt;
+		if (
+			typeof this.obj.errorLimit === "number" &amp;&amp;
+			this.obj.errorLimit > 0
+		) {
+			var errorLimit = document.createElement("div");
+			errorLimit.classList.add("errorLimit");
+			errorLimit.innerHTML =
+				"File take more than " +
+				this.obj.errorLimit +
+				" KB, you need to ";
+
+			compressIt = document.createElement("span");
+			compressIt.innerHTML = "compress it.";
+			compressIt.classList.add("compressLink");
+			compressIt.onclick = function () {
+				_this.configure();
+			};
+			errorLimit.appendChild(compressIt);
+
+			this.html.appendChild(errorLimit);
+
+			this.errorLimit = errorLimit;
+		}
+
+		if (
+			typeof this.obj.warningLimit === "number" &amp;&amp;
+			this.obj.warningLimit > 0
+		) {
+			var warningLimit = document.createElement("div");
+			warningLimit.classList.add("warningLimit");
+			warningLimit.innerHTML =
+				"File take more than " + this.obj.warningLimit + " KB, try to ";
+
+			compressIt = document.createElement("span");
+			compressIt.innerHTML = "compress it.";
+			compressIt.classList.add("compressLink");
+			compressIt.onclick = function () {
+				_this.configure();
+			};
+			warningLimit.appendChild(compressIt);
+
+			this.html.appendChild(warningLimit);
+
+			this.warningLimit = warningLimit;
+		}
+	}
+
+	build() {
+		super.build();
+
+		this.placeholder = this.placeholder || "Choose file";
+		this.defaultFileName = this.defaultFileName || "File";
+
+		var _this = this;
+
+		var obj = this.obj;
+
+		this.originalSource = {
+			src: obj.src,
+		};
+
+		if (obj.data) {
+			this.originalSource.data = obj.data;
+		}
+
+		// this.html.style.cssText = "justify-content: flex-start;flex-wrap: wrap;position: relative;align-items: stretch;";
+
+		if (this.title) {
+			this.title.style.textAlign = "left";
+		}
+
+		var fullDiv = document.createElement("div");
+		fullDiv.classList.add("fileField");
+
+		var customFile = (this.file_block = document.createElement("div"));
+		customFile.classList.add("custom-file");
+
+		var inp_file = document.createElement("input");
+		inp_file.type = "file";
+		inp_file.id = this.id;
+		inp_file.classList.add("form-control");
+		inp_file.classList.add("file-input");
+
+		this.input = inp_file;
+
+		customFile.appendChild(inp_file);
+
+		var inp_label = document.createElement("label");
+		inp_label.setAttribute("for", this.id);
+		inp_label.style.overflow = "hidden";
+		inp_label.classList.add("form-label");
+		inp_label.classList.add("file-btn");
+
+		var label_icon = document.createElement("i");
+		label_icon.classList.add("fas");
+		label_icon.classList.add("fa-file-upload");
+
+		// var label_text = document.createElement('span');
+		// label_text.innerText = this.placeholder;
+
+		inp_label.appendChild(label_icon);
+		// inp_label.appendChild(label_text)
+
+		if (obj.browseLabel === false) {
+			inp_label.classList.add("no-after");
+		}
+
+		// inp_label.innerHTML = obj.name || (obj.src &amp;&amp; obj.src.length > 5 ? _this.defaultFileName : _this.placeholder);
+
+		// inp_label.innerHTML = this.placeholder;
+
+		customFile.appendChild(inp_label);
+
+		// var controllDiv = document.createElement("div");
+		// controllDiv.classList.add('fileControllBlock');
+
+		// var clearButton = document.createElement("button");
+		// clearButton.classList.add("btn_awe");
+		// clearButton.classList.add("iconButton");
+		// clearButton.title = "Remove current file";
+		// clearButton.setAttribute("disabled", true);
+		// clearButton.style.cssText = "background-color: #af4242; margin-right: 3px; display: none;";
+		// clearButton.innerHTML = '&lt;i class="fa fa-trash">&lt;/i>';
+
+		// controllDiv.appendChild(clearButton);
+
+		// this.clearButton = clearButton;
+
+		// var configureButton = document.createElement("button");
+		// configureButton.classList.add("btn_awe");
+		// configureButton.classList.add("iconButton");
+		// configureButton.title = "Configure this image";
+		// configureButton.setAttribute("disabled", true);
+		// configureButton.style.cssText = "background-color: #5a3d75;";
+		// configureButton.innerHTML = '&lt;i class="fa fa-cogs">&lt;/i>';
+
+		// controllDiv.appendChild(configureButton);
+
+		// this.configureButton = configureButton;
+
+		// fullDiv.appendChild(controllDiv);
+
+		fullDiv.appendChild(customFile);
+
+		this.html.appendChild(fullDiv);
+
+		this._buildLimits();
+
+		inp_file.onchange = function () {
+			if (this.files instanceof FileList) {
+				if (this.files[0]) {
+					// obj.name = this.nextElementSibling.innerHTML = this.files[0].name;
+					obj.name = this.files[0].name;
+					_this.fileChanged(this.files[0]);
+				}
+			}
+		};
+
+		// configureButton.onclick = function()
+		// {
+		//     _this.configure();
+		// }
+
+		// clearButton.onclick = function()
+		// {
+
+		//     // var changed = false;
+
+		//     if (obj.src !== "")
+		//     {
+		//         // changed = true;
+		//         obj.changed = true;
+
+		//         obj.src = "";
+		//         obj.name = void 0;
+
+		//         inp_file.type = "text";
+		//         inp_file.type = "file";
+
+		//         _this.srcChanged();
+
+		//         _this.onChange(obj.src, obj.data);
+		//     }
+		// }
+
+		this.srcChanged();
+
+		// if (obj.removable === true)
+		// {
+		//     clearButton.style.display = "block";
+		// }
+	}
+
+	srcChanged(originalSrc) {
+		this.calculateSize();
+
+		var obj = this.obj;
+
+		if (obj.src &amp;&amp; obj.src.length > 5) {
+			this.originalSource = originalSrc || this.originalSource;
+
+			// this.configureButton.removeAttribute("disabled");
+			// this.clearButton.removeAttribute("disabled");
+			// this.input.nextElementSibling.innerHTML = obj.name || (obj.src &amp;&amp; obj.src.length > 5 ? this.defaultFileName : this.placeholder);
+		} else {
+			// this.configureButton.setAttribute("disabled", true);
+			// this.clearButton.setAttribute("disabled", true);
+			// this.input.nextElementSibling.innerHTML = this.placeholder;
+		}
+	}
+
+	updateSrc() {}
+
+	fileChanged(file) {
+		var _this = this;
+
+		readFileToBase64(file, function (res) {
+			_this.obj.src = res;
+
+			_this.obj.changed = true;
+
+			_this.onChange(_this.obj.src);
+
+			_this.srcChanged(_this.obj.src);
+		});
+	}
+
+	configure() {}
+
+	change(value, callCallback) {
+		var changed = false;
+
+		if (value !== undefined) {
+			if (this.obj.src !== value) {
+				changed = true;
+			}
+
+			this.obj.src = value;
+		}
+
+		if (this.defaultValue === undefined) this.defaultValue = this.obj.src;
+
+		if (this.originalSource.src !== this.obj.src || changed) {
+			this.originalSource.src = this.obj.src;
+
+			if (this.obj.data) {
+				this.originalSource.data = this.obj.data;
+			}
+
+			this.obj.changed = true;
+
+			this.srcChanged(this.originalSource);
+		}
+
+		if (changed &amp;&amp; callCallback) {
+			this.onChange(this.obj.src);
+		}
+
+		return changed;
+	}
+
+	calculateSize() {
+		if (this.errorLimit) {
+			this.errorLimit.style.display = "none";
+		}
+
+		if (this.warningLimit) {
+			this.warningLimit.style.display = "none";
+		}
+
+		var sizeInKb = FileBlock.fileSize(
+			this.obj.src || "",
+			this.obj.compareToFileSize !== false
+		);
+
+		if (sizeInKb > 0) {
+			if (this.errorLimit &amp;&amp; sizeInKb > this.obj.errorLimit) {
+				this.errorLimit.style.display = "block";
+			} else if (this.warningLimit &amp;&amp; sizeInKb > this.obj.warningLimit) {
+				this.warningLimit.style.display = "block";
+			}
+
+			this.html.title = "File size is " + sizeInKb.toFixed(2) + " KB";
+		}
+	}
+
+	static getType() {
+		return "file";
+	}
+}
+
+function readFileToBase64(file, cb) {
+	var reader = new FileReader();
+	reader.onload = function (e) {
+		cb(reader.result);
+	};
+	reader.readAsDataURL(file);
+}
+
+function base64FileSize(src) {
+	var base64Length = src.length - (src.indexOf(",") + 1);
+	var padding =
+		src.charAt(src.length - 2) === "="
+			? 2
+			: src.charAt(src.length - 1) === "="
+			? 1
+			: 0;
+	return base64Length * 0.75 - padding;
+}
+
+Block.register("file", FileBlock, "src");
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.0</a> on Thu Dec 15 2022 15:38:11 GMT+0200 (Eastern European Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

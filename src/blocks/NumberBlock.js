@@ -4,119 +4,139 @@
  * @license      {@link https://legal.ubi.com/privacypolicy/en-INTL}
  */
 
-import Block from '../BlockPlugin';
-import OptionBlock from './OptionBlock';
+import Block from "../BlockPlugin";
+import OptionBlock from "./OptionBlock";
 
-export default class NumberBlock extends OptionBlock 
-{
+/**
+ * @function
+ * @name number
+ * @description This type of option is intended for specifying of number field for user
+ * @param {string} title - label that will be show next to the option
+ * @param {string} description - brief description of options, that will be shown when user hover over option
+ * @param {number} value - default value of your number option
+ * @param {number} min - minimum value that user can set.
+ * @param {number} max - maximum value that user can set
+ * @param {number} step - step of increasing or decreasing number
+ * @param {Function} onChange - function that will be called when the user changes value of the option
+ * 
+ * @example 
 
-    // constructor(id, obj) 
-    // {
-    //     super(id, obj);
-    // }
+    GAME_DURATION: {
 
-    build() 
-    {
-        super.build();
+        type: "number",
 
-        var input = document.createElement("input");
-            input.id = this.id
-            input.type = "number";
-            input.className = "form-control";
-            input.style.width = "150px";
+        title: "Playable duration",
 
-        this.input = input;
+        value: 5,
 
-        this.html.appendChild(input);
+        min: 3,
 
-        var _this = this;
+        max: 30,
 
-        function change() 
-        {
-            _this.change(Number(this.value), true);
-        }
+        step: 1,
 
-        if (this.obj.oninput) {
-            input.oninput = change;
-        } else {
-            input.onchange = change;
+        onChange: function ( value ) {
+
+            console.log( value )
+
         }
     }
+ */
+export default class NumberBlock extends OptionBlock {
+	// constructor(id, obj)
+	// {
+	//     super(id, obj);
+	// }
 
-    change(value, callCallback) 
-    {
-        var changed = false;
+	build() {
+		super.build();
 
-        var prevValue = this.input.value;
+		var input = document.createElement("input");
+		input.id = this.id;
+		input.type = "number";
+		input.className = "form-control";
+		input.style.width = "150px";
 
-        var obj = this.obj;
+		this.input = input;
 
-        if (value !== undefined) 
-        {
-            if (!obj.oninput) 
-            {
-                if (typeof obj.min === 'number' && value < obj.min) 
-                {
-                    value = obj.min;
-                } 
-                else if (typeof obj.max === 'number' && value > obj.max) 
-                {
-                    value = obj.max;
-                }
-            }
+		this.html.appendChild(input);
 
-            if (obj.value !== value) 
-            {
-                changed = true;
-            }
+		var _this = this;
 
-            obj.value = value;
-        }
+		function change() {
+			_this.change(Number(this.value), true);
+		}
 
-        this.input.value = "" + obj.value;
+		if (this.obj.oninput) {
+			input.oninput = change;
+		} else {
+			input.onchange = change;
+		}
+	}
 
-        if (typeof obj.min === "number" && obj.min !== this.input.min)
-            this.input.min = "" + obj.min;
+	change(value, callCallback) {
+		var changed = false;
 
-        if (typeof obj.max === "number" && obj.max !== this.input.max)
-            this.input.max = "" + obj.max;
+		var prevValue = this.input.value;
 
-        if (typeof obj.step === "number" && obj.step !== this.input.step)
-            this.input.step = "" + obj.step;
+		var obj = this.obj;
 
-        if (typeof obj.max === "number" && obj.max === obj.min) {
-            this.input.classList.add("cfger-disabled")
-        } else {
-            this.input.classList.remove("cfger-disabled")
-        }
+		if (value !== undefined) {
+			if (!obj.oninput) {
+				if (typeof obj.min === "number" && value < obj.min) {
+					value = obj.min;
+				} else if (typeof obj.max === "number" && value > obj.max) {
+					value = obj.max;
+				}
+			}
 
-        if (this.input.value !== obj.value) 
-        {
-            obj.value = Number(this.input.value);
-        }
+			if (obj.value !== value) {
+				changed = true;
+			}
 
-        if (this.defaultValue === undefined) this.defaultValue = obj.value;
-        this.input.value = "" + obj.value;
+			obj.value = value;
+		}
 
-        if (this.input.value !== prevValue || changed) 
-        {
-            changed = true;
-            obj.changed = true;
-            this.indicator && this.indicator.apply();
-        }
+		this.input.value = "" + obj.value;
 
-        if (changed && callCallback) 
-        {
-            this.onChange(obj.value);
-        }
+		if (typeof obj.min === "number" && obj.min !== this.input.min)
+			this.input.min = "" + obj.min;
 
-        return changed;
-    }
+		if (typeof obj.max === "number" && obj.max !== this.input.max)
+			this.input.max = "" + obj.max;
 
-    static getType() 
-    {
-        return "number";
-    }
+		if (typeof obj.step === "number" && obj.step !== this.input.step)
+			this.input.step = "" + obj.step;
+
+		if (typeof obj.max === "number" && obj.max === obj.min) {
+			this.input.classList.add("cfger-disabled");
+		} else {
+			this.input.classList.remove("cfger-disabled");
+		}
+
+		if (this.input.value !== obj.value) {
+			obj.value = Number(this.input.value);
+		}
+
+		if (this.defaultValue === undefined) this.defaultValue = obj.value;
+		this.input.value = "" + obj.value;
+
+		if (this.input.value !== prevValue || changed) {
+			changed = true;
+			obj.changed = true;
+			this.indicator && this.indicator.apply();
+		}
+
+		if (changed && callCallback) {
+			this.onChange(obj.value);
+		}
+
+		return changed;
+	}
+
+	static getType() {
+		return "number";
+	}
 }
 
-Block.register('number', NumberBlock, 'value');
+Block.register("number", NumberBlock, "value");
