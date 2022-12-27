@@ -1,5 +1,5 @@
 {
-  "name": "configer",
+  "name": "configer.js",
   "version": "1.0.0",
   "description": "A graphical user interface builder for different input types",
   "scripts": {
@@ -7,7 +7,8 @@
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "README.md"
   ],
   "module": "dist/configer.esm.min.js",
   "browser": "dist/configer.umd.min.js",
