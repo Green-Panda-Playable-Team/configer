@@ -4,7 +4,8 @@
   "description": "A graphical user interface builder for different input types",
   "scripts": {
     "build": "rollup --config rollup.config.mjs",
-    "dev": "rollup -w --config rollup.config.mjs"
+    "dev": "rollup -w --config rollup.config.mjs",
+    "docs": "jsdoc -r ./src/ -t ./docs/template -d ./docs/out/ -R ./README.md"
   },
   "files": [
     "dist",

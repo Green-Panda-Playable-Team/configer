@@ -7,13 +7,32 @@
 import Block from "../BlockPlugin";
 import FileBlock from "./FileBlock";
 
-function getAudioTypeFromBase64(src) {
-	const typeStart = src.indexOf(":");
-	const typeEnd = src.indexOf(";");
+/**
+ * @function
+ * @name sound
+ * @description This type of option is intended for specifying of audio file input field for the user.
+ * @param {string} title - label that will be show next to the option
+ * @param {string} description - brief description of options, that will be shown when user hover over option
+ * @param {string} src - default audio file value, encoded into base64 code.
+ * @param {Function} onChange - function that will be called when the user changes value of the option
+ * 
+ * @example 
+    AUDIO_1: {
 
-	return src.slice(typeStart + 1, typeEnd);
-}
+        type: "sound",
 
+        title: "Some sound file",
+
+        src: "base64...",
+
+        onChange: function ( src ) {
+
+            console.log( src )
+
+        }
+
+    }
+ */
 export default class SoundBlock extends FileBlock {
 	constructor(id, obj) {
 		super(id, obj);
@@ -83,6 +102,13 @@ export default class SoundBlock extends FileBlock {
 	static getType() {
 		return "sound";
 	}
+}
+
+function getAudioTypeFromBase64(src) {
+	const typeStart = src.indexOf(":");
+	const typeEnd = src.indexOf(";");
+
+	return src.slice(typeStart + 1, typeEnd);
 }
 
 Block.register("sound", SoundBlock, "src");
