@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "A graphical user interface builder for different input types",
   "scripts": {
-    "build": "rollup --config rollup.config.mjs"
+    "build": "rollup --config rollup.config.mjs",
+    "dev": "rollup -w --config rollup.config.mjs"
   },
   "files": [
     "dist",

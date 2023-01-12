@@ -1,0 +1,9 @@
+@import "icons";
+
+.cfger-block {
+    margin-bottom: 10px;
+
+    @import "core";
+    @import "components";
+    @import "bootstrap";
+}

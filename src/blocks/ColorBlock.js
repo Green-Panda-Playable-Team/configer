@@ -134,6 +134,7 @@ export default class ColorBlock extends OptionBlock {
 		input.type = this.obj.type;
 		input.value = this.obj.value.color;
 		input.className = "form-control color-alpha-input-color";
+		input.style.opacity = this.obj.value.alpha;
 
 		input_block.appendChild(input);
 		container.appendChild(input_block);
@@ -141,7 +142,7 @@ export default class ColorBlock extends OptionBlock {
 		var alpha_btn = document.createElement("div");
 		alpha_btn.className = "color-alpha-btn config-drowdown-btn";
 		var alpha_icon = document.createElement("i");
-		alpha_icon.className = "far fa-eye";
+		alpha_icon.className = "cicon-eye";
 		alpha_btn.appendChild(alpha_icon);
 
 		var container_drowdown = document.createElement("div");

@@ -24,6 +24,7 @@ import "./blocks/TextAreaBlock";
 import "./blocks/DataBlock";
 import "./blocks/RootItemsBlock";
 import "./blocks/FontBlock";
+import "./blocks/SoundBlock";
 
 import BlockPlugin from "./BlockPlugin";
 import Parse from "./Parse";
