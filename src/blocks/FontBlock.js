@@ -143,7 +143,7 @@ export default class FontBlock extends OptionBlock {
 		var alpha_btn = document.createElement("div");
 		alpha_btn.className = "color-alpha-btn config-drowdown-btn";
 		var alpha_icon = document.createElement("i");
-		alpha_icon.className = "far fa-eye";
+		alpha_icon.className = "cicon-eye";
 		alpha_btn.appendChild(alpha_icon);
 
 		var container_drowdown = document.createElement("div");
@@ -266,7 +266,7 @@ export default class FontBlock extends OptionBlock {
 
 		size_btn.appendChild(label_value);
 		var icon = document.createElement("i");
-		icon.className = "fas fa-sort-down font-range-icon";
+		icon.className = "cicon-sort-down font-range-icon";
 		size_btn.appendChild(icon);
 
 		var container_drowdown = document.createElement("div");

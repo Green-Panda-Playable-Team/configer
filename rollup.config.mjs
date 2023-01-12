@@ -9,7 +9,10 @@ import postcss from "rollup-plugin-postcss";
 import url from "postcss-url";
 
 export default {
-	input: "index.js",
+	input: "./src/index.js",
+	watch: {
+		include: ["./src/**"],
+	},
 	output: [
 		{
 			name: "configer",
@@ -37,6 +40,8 @@ export default {
 				}),
 			],
 			extract: "style.css",
+			minimize: true,
+			sourceMap: false,
 			extensions: [".scss", ".sass", ".css"],
 		}),
 		commonjs(),

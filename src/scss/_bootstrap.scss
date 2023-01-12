@@ -4,6 +4,11 @@ label {
 input, button, select, optgroup, textarea {
     margin: 0
 }
+
+input:focus, button:focus, select:focus, optgroup:focus, textarea:focus {
+    outline: none;
+}
+
 .form-select {
     display: block;
     width: 100%;
@@ -38,7 +43,6 @@ input, button, select, optgroup, textarea {
     padding: 0.375rem 0.75rem;
     font-size: 1rem;
     font-weight: 400;
-    line-height: 1.5;
     color: #5a5c69;
     background-color: #fff;
     background-clip: padding-box;
@@ -66,3 +70,47 @@ input, button, select, optgroup, textarea {
     border-radius: 0.35rem;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+
+.btn-primary {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff
+}
+.btn-secondary {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+.btn-success {
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+}
+.btn-danger {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+.btn-warning {
+    color: #212529;
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+.btn-info {
+    color: #fff;
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+input[type="color"]::-moz-color-swatch {
+    border: none;
+  }
+  
+  input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+    border-radius: 0;
+  }
+  
+  input[type="color"]::-webkit-color-swatch {
+    border: none;
+  }
