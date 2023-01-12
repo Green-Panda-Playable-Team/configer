@@ -9,8 +9,6 @@ import GUI from "../GUI";
 import Utils from "../utils";
 import FileBlock from "./FileBlock";
 
-// const noop = function() {};
-
 /**
  * @function
  * @name image
@@ -81,7 +79,7 @@ export default class ImageBlock extends FileBlock {
 	// }
 
 	buildPreview() {
-		var preview_btn = FileBlock.createButton("fas fa-eye");
+		var preview_btn = FileBlock.createButton("cicon-eye");
 
 		var popover = document.createElement("div");
 		popover.classList.add("block-popover-container");
@@ -96,7 +94,7 @@ export default class ImageBlock extends FileBlock {
 		preview_block.appendChild(preview_image);
 
 		preview_btn.onpointerover = () => {
-			preview_block.style.display = "block";
+			if (this.obj.src.length) preview_block.style.display = "block";
 		};
 		preview_btn.onpointerleave = () => {
 			preview_block.style.display = "none";
@@ -110,7 +108,7 @@ export default class ImageBlock extends FileBlock {
 		var container = document.createElement("div");
 
 		var config_btn = (this.config_btn =
-			FileBlock.createButton("fas fa-cog"));
+			FileBlock.createButton("cicon-cog"));
 		config_btn.classList.add("file-drowdown-btn");
 		container.append(config_btn);
 

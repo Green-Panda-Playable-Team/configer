@@ -6,7 +6,6 @@
 
 import Block from "../BlockPlugin";
 import OptionBlock from "./OptionBlock";
-
 /**
  * @function
  * @name file
@@ -158,7 +157,7 @@ export default class FileBlock extends OptionBlock {
 
 		var label_icon = document.createElement("i");
 		label_icon.classList.add("fas");
-		label_icon.classList.add("fa-file-upload");
+		label_icon.classList.add("cicon-upload");
 
 		// var label_text = document.createElement('span');
 		// label_text.innerText = this.placeholder;

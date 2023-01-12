@@ -1,12 +1,23 @@
 # Configer
 
-A graphical user interface build for variables
+A graphical user interface builder for different input types
 
-[See all the avaiable block types](docs.greenpandagames.com/web/playable/configer/global.html)
+[See all the avaiable block types](https://docs.greenpandagames.com/web/playable/configer/global.html)
+
+## Installation
+
+```sh
+npm i configer
+```
 
 ## How to use
 
 ```js
+// import configer styles
+import "configer/dist/style.css";
+// import configer
+import configer from "configer";
+
 // setup config
 var config = {
 	name: {

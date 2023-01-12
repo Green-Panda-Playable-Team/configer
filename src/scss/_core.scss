@@ -145,6 +145,10 @@
 
 .custom-file {
   display: flex;
+
+  input[type=file] {
+    display: none;
+  }
 }
 
 .file-preview-block {

@@ -8,7 +8,6 @@ import Block from "../BlockPlugin";
 import Container from "./Container";
 // import GeneralBlock from './GeneralBlock';
 import utils from "../utils";
-
 /**
  * @function
  * @name data_set
@@ -187,8 +186,7 @@ export default class DataSetBlock extends Container {
 		button_reset.classList.add("cfger-button");
 		button_reset.style.marginRight = "5px";
 		button_reset.title = "Reset to default";
-		button_reset.innerHTML = '<i class="fas fa-undo"></i>';
-
+		button_reset.innerHTML = '<i class="cicon-undo"></i>';
 		var _this = this;
 
 		button_reset.onclick = function (e) {

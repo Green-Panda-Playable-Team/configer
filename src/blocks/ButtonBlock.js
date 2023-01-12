@@ -6,7 +6,6 @@
 
 import Block from "../BlockPlugin";
 import GeneralBlock from "./GeneralBlock";
-
 /**
  * @function
  * @name button
@@ -55,7 +54,7 @@ export default class ButtonBlock extends GeneralBlock {
 		super.build();
 
 		var obj = this.obj;
-
+		// this.obj.ignore = true;
 		var button = document.createElement("button");
 		button.classList.add("btn");
 
@@ -95,4 +94,4 @@ export default class ButtonBlock extends GeneralBlock {
 	}
 }
 
-Block.register("button", ButtonBlock, "value");
+Block.register("button", ButtonBlock);
