@@ -4,379 +4,347 @@
  * @license      {@link https://legal.ubi.com/privacypolicy/en-INTL}
  */
 
-import Block from '../BlockPlugin';
-import OptionBlock from './OptionBlock';
-
-export default class FileBlock extends OptionBlock
-{
-
-    static createButton(iconClass) {
-
-        var btn = document.createElement('div');
-        btn.classList.add("file-btn")
-        var icon = document.createElement('i');
-        icon.className = iconClass;
-        btn.appendChild(icon);
-        return btn;
-    }
-
-    static fileSize(image, isFileSize)  {
-        var sizeInBytes = image.length;
-
-        if (isFileSize !== false) 
-        {
-            sizeInBytes = base64FileSize(image);
-        }
-
-        return sizeInBytes / 1000;
-    }
-
-
-    constructor(id, obj)
-    {
-        super(id, obj);
-
-        obj.block.configure = this.configure.bind(this);
-        obj.block.fileChanged = this.fileChanged.bind(this);
-    }
-
-    _buildLimits()
-    {
-        var _this = this;
-        var compressIt;
-        if (typeof this.obj.errorLimit === "number" && this.obj.errorLimit > 0)
-        {
-            var errorLimit = document.createElement("div");
-            errorLimit.classList.add("errorLimit");
-            errorLimit.innerHTML = "File take more than " + this.obj.errorLimit + " KB, you need to ";
+import Block from "../BlockPlugin";
+import OptionBlock from "./OptionBlock";
+
+export default class FileBlock extends OptionBlock {
+	static createButton(iconClass) {
+		var btn = document.createElement("div");
+		btn.classList.add("file-btn");
+		var icon = document.createElement("i");
+		icon.className = iconClass;
+		btn.appendChild(icon);
+		return btn;
+	}
+
+	static fileSize(image, isFileSize) {
+		var sizeInBytes = image.length;
+
+		if (isFileSize !== false) {
+			sizeInBytes = base64FileSize(image);
+		}
+
+		return sizeInBytes / 1000;
+	}
+
+	constructor(id, obj) {
+		super(id, obj);
+
+		obj.block.configure = this.configure.bind(this);
+		obj.block.fileChanged = this.fileChanged.bind(this);
+	}
+
+	_buildLimits() {
+		var _this = this;
+		var compressIt;
+		if (
+			typeof this.obj.errorLimit === "number" &&
+			this.obj.errorLimit > 0
+		) {
+			var errorLimit = document.createElement("div");
+			errorLimit.classList.add("errorLimit");
+			errorLimit.innerHTML =
+				"File take more than " +
+				this.obj.errorLimit +
+				" KB, you need to ";
+
+			compressIt = document.createElement("span");
+			compressIt.innerHTML = "compress it.";
+			compressIt.classList.add("compressLink");
+			compressIt.onclick = function () {
+				_this.configure();
+			};
+			errorLimit.appendChild(compressIt);
+
+			this.html.appendChild(errorLimit);
+
+			this.errorLimit = errorLimit;
+		}
+
+		if (
+			typeof this.obj.warningLimit === "number" &&
+			this.obj.warningLimit > 0
+		) {
+			var warningLimit = document.createElement("div");
+			warningLimit.classList.add("warningLimit");
+			warningLimit.innerHTML =
+				"File take more than " + this.obj.warningLimit + " KB, try to ";
+
+			compressIt = document.createElement("span");
+			compressIt.innerHTML = "compress it.";
+			compressIt.classList.add("compressLink");
+			compressIt.onclick = function () {
+				_this.configure();
+			};
+			warningLimit.appendChild(compressIt);
+
+			this.html.appendChild(warningLimit);
 
-            compressIt = document.createElement("span");
-            compressIt.innerHTML = "compress it.";
-            compressIt.classList.add("compressLink");
-            compressIt.onclick = function()
-            {
-                _this.configure();
-            }
-            errorLimit.appendChild(compressIt);
+			this.warningLimit = warningLimit;
+		}
+	}
 
-            this.html.appendChild(errorLimit);
+	build() {
+		super.build();
 
-            this.errorLimit = errorLimit;
-        }
+		this.placeholder = this.placeholder || "Choose file";
+		this.defaultFileName = this.defaultFileName || "File";
 
-        if (typeof this.obj.warningLimit === "number" && this.obj.warningLimit > 0)
-        {
-            var warningLimit = document.createElement("div");
-            warningLimit.classList.add("warningLimit");
-            warningLimit.innerHTML = "File take more than " + this.obj.warningLimit + " KB, try to ";
+		var _this = this;
 
-            compressIt = document.createElement("span");
-            compressIt.innerHTML = "compress it.";
-            compressIt.classList.add("compressLink");
-            compressIt.onclick = function()
-            {
-                _this.configure();
-            }
-            warningLimit.appendChild(compressIt);
+		var obj = this.obj;
+
+		this.originalSource = {
+			src: obj.src,
+		};
+
+		if (obj.data) {
+			this.originalSource.data = obj.data;
+		}
+
+		// this.html.style.cssText = "justify-content: flex-start;flex-wrap: wrap;position: relative;align-items: stretch;";
 
-            this.html.appendChild(warningLimit);
+		if (this.title) {
+			this.title.style.textAlign = "left";
+		}
 
-            this.warningLimit = warningLimit;
-        }
-    }
+		var fullDiv = document.createElement("div");
+		fullDiv.classList.add("fileField");
 
-    build()
-    {
-        super.build();
+		var customFile = (this.file_block = document.createElement("div"));
+		customFile.classList.add("custom-file");
 
-        this.placeholder = this.placeholder || "Choose file";
-        this.defaultFileName = this.defaultFileName || "File";
+		var inp_file = document.createElement("input");
+		inp_file.type = "file";
+		inp_file.id = this.id;
+		inp_file.classList.add("form-control");
+		inp_file.classList.add("file-input");
 
-        var _this = this;
+		this.input = inp_file;
 
-        var obj = this.obj;
+		customFile.appendChild(inp_file);
 
-        this.originalSource = {
-            src: obj.src
-        };
+		var inp_label = document.createElement("label");
+		inp_label.setAttribute("for", this.id);
+		inp_label.style.overflow = "hidden";
+		inp_label.classList.add("form-label");
+		inp_label.classList.add("file-btn");
 
-        if (obj.data)
-        {
-            this.originalSource.data = obj.data;
-        }
+		var label_icon = document.createElement("i");
+		label_icon.classList.add("fas");
+		label_icon.classList.add("cicon-upload");
 
-        // this.html.style.cssText = "justify-content: flex-start;flex-wrap: wrap;position: relative;align-items: stretch;";
+		// var label_text = document.createElement('span');
+		// label_text.innerText = this.placeholder;
 
-        if (this.title)
-        {
-            this.title.style.textAlign = "left";
-        }
+		inp_label.appendChild(label_icon);
+		// inp_label.appendChild(label_text)
 
-        var fullDiv = document.createElement("div");
-        fullDiv.classList.add('fileField');
+		if (obj.browseLabel === false) {
+			inp_label.classList.add("no-after");
+		}
 
-        var customFile = this.file_block = document.createElement("div")
-        customFile.classList.add("custom-file");
+		// inp_label.innerHTML = obj.name || (obj.src && obj.src.length > 5 ? _this.defaultFileName : _this.placeholder);
 
-        var inp_file = document.createElement("input")
-        inp_file.type = "file"
-        inp_file.id = this.id
-        inp_file.classList.add("form-control");
-        inp_file.classList.add("file-input");
+		// inp_label.innerHTML = this.placeholder;
 
-        this.input = inp_file;
+		customFile.appendChild(inp_label);
 
-        customFile.appendChild(inp_file)
+		// var controllDiv = document.createElement("div");
+		// controllDiv.classList.add('fileControllBlock');
 
-        var inp_label = document.createElement("label");
-        inp_label.setAttribute("for", this.id)
-        inp_label.style.overflow = "hidden";
-        inp_label.classList.add("form-label");
-        inp_label.classList.add("file-btn");
+		// var clearButton = document.createElement("button");
+		// clearButton.classList.add("btn_awe");
+		// clearButton.classList.add("iconButton");
+		// clearButton.title = "Remove current file";
+		// clearButton.setAttribute("disabled", true);
+		// clearButton.style.cssText = "background-color: #af4242; margin-right: 3px; display: none;";
+		// clearButton.innerHTML = '<i class="fa fa-trash"></i>';
 
-        var label_icon = document.createElement('i');
-        label_icon.classList.add("fas")
-        label_icon.classList.add("fa-file-upload")
+		// controllDiv.appendChild(clearButton);
 
-        // var label_text = document.createElement('span');
-        // label_text.innerText = this.placeholder;
+		// this.clearButton = clearButton;
 
+		// var configureButton = document.createElement("button");
+		// configureButton.classList.add("btn_awe");
+		// configureButton.classList.add("iconButton");
+		// configureButton.title = "Configure this image";
+		// configureButton.setAttribute("disabled", true);
+		// configureButton.style.cssText = "background-color: #5a3d75;";
+		// configureButton.innerHTML = '<i class="fa fa-cogs"></i>';
 
-        inp_label.appendChild(label_icon)
-        // inp_label.appendChild(label_text)
+		// controllDiv.appendChild(configureButton);
 
+		// this.configureButton = configureButton;
 
+		// fullDiv.appendChild(controllDiv);
 
-        if (obj.browseLabel === false)
-        {
-            inp_label.classList.add("no-after");
-        }
+		fullDiv.appendChild(customFile);
 
-        // inp_label.innerHTML = obj.name || (obj.src && obj.src.length > 5 ? _this.defaultFileName : _this.placeholder);
+		this.html.appendChild(fullDiv);
 
-        // inp_label.innerHTML = this.placeholder;
+		this._buildLimits();
 
-        customFile.appendChild(inp_label)
+		inp_file.onchange = function () {
+			if (this.files instanceof FileList) {
+				if (this.files[0]) {
+					// obj.name = this.nextElementSibling.innerHTML = this.files[0].name;
+					obj.name = this.files[0].name;
+					_this.fileChanged(this.files[0]);
+				}
+			}
+		};
 
-        // var controllDiv = document.createElement("div");
-        // controllDiv.classList.add('fileControllBlock');
+		// configureButton.onclick = function()
+		// {
+		//     _this.configure();
+		// }
 
-        // var clearButton = document.createElement("button");
-        // clearButton.classList.add("btn_awe");
-        // clearButton.classList.add("iconButton");
-        // clearButton.title = "Remove current file";
-        // clearButton.setAttribute("disabled", true);
-        // clearButton.style.cssText = "background-color: #af4242; margin-right: 3px; display: none;";
-        // clearButton.innerHTML = '<i class="fa fa-trash"></i>';
+		// clearButton.onclick = function()
+		// {
 
-        // controllDiv.appendChild(clearButton);
+		//     // var changed = false;
 
-        // this.clearButton = clearButton;
+		//     if (obj.src !== "")
+		//     {
+		//         // changed = true;
+		//         obj.changed = true;
 
-        // var configureButton = document.createElement("button");
-        // configureButton.classList.add("btn_awe");
-        // configureButton.classList.add("iconButton");
-        // configureButton.title = "Configure this image";
-        // configureButton.setAttribute("disabled", true);
-        // configureButton.style.cssText = "background-color: #5a3d75;";
-        // configureButton.innerHTML = '<i class="fa fa-cogs"></i>';
+		//         obj.src = "";
+		//         obj.name = void 0;
 
-        // controllDiv.appendChild(configureButton);
+		//         inp_file.type = "text";
+		//         inp_file.type = "file";
 
-        // this.configureButton = configureButton;
+		//         _this.srcChanged();
 
+		//         _this.onChange(obj.src, obj.data);
+		//     }
+		// }
 
-        // fullDiv.appendChild(controllDiv);
+		this.srcChanged();
 
-        fullDiv.appendChild(customFile);
+		// if (obj.removable === true)
+		// {
+		//     clearButton.style.display = "block";
+		// }
+	}
 
-        this.html.appendChild(fullDiv);
+	srcChanged(originalSrc) {
+		this.calculateSize();
 
-        this._buildLimits();
+		var obj = this.obj;
 
-        inp_file.onchange = function()
-        {
-            if (this.files instanceof FileList)
-            {
-                if (this.files[0])
-                {
-                    // obj.name = this.nextElementSibling.innerHTML = this.files[0].name;
-                    obj.name = this.files[0].name;
-                    _this.fileChanged(this.files[0]);
-                }
-            }
-        }
+		if (obj.src && obj.src.length > 5) {
+			this.originalSource = originalSrc || this.originalSource;
 
-        // configureButton.onclick = function()
-        // {
-        //     _this.configure();
-        // }
+			// this.configureButton.removeAttribute("disabled");
+			// this.clearButton.removeAttribute("disabled");
+			// this.input.nextElementSibling.innerHTML = obj.name || (obj.src && obj.src.length > 5 ? this.defaultFileName : this.placeholder);
+		} else {
+			// this.configureButton.setAttribute("disabled", true);
+			// this.clearButton.setAttribute("disabled", true);
+			// this.input.nextElementSibling.innerHTML = this.placeholder;
+		}
+	}
 
-        // clearButton.onclick = function()
-        // {
+	updateSrc() {}
 
-        //     // var changed = false;
+	fileChanged(file) {
+		var _this = this;
 
-        //     if (obj.src !== "")
-        //     {
-        //         // changed = true;
-        //         obj.changed = true;
+		readFileToBase64(file, function (res) {
+			_this.obj.src = res;
 
-        //         obj.src = "";
-        //         obj.name = void 0;
+			_this.obj.changed = true;
 
-        //         inp_file.type = "text";
-        //         inp_file.type = "file";
+			_this.onChange(_this.obj.src);
 
-        //         _this.srcChanged();
+			_this.srcChanged(_this.obj.src);
+		});
+	}
 
-        //         _this.onChange(obj.src, obj.data);
-        //     }
-        // }
+	configure() {}
 
-        this.srcChanged();
+	change(value, callCallback) {
+		var changed = false;
 
-        // if (obj.removable === true)
-        // {
-        //     clearButton.style.display = "block";
-        // }
-    }
+		if (value !== undefined) {
+			if (this.obj.src !== value) {
+				changed = true;
+			}
 
-    srcChanged (originalSrc)
-    {
-        this.calculateSize();
+			this.obj.src = value;
+		}
 
-        var obj = this.obj;
+		if (this.defaultValue === undefined) this.defaultValue = this.obj.src;
 
+		if (this.originalSource.src !== this.obj.src || changed) {
+			this.originalSource.src = this.obj.src;
 
+			if (this.obj.data) {
+				this.originalSource.data = this.obj.data;
+			}
 
-        if (obj.src && obj.src.length > 5)
-        {
-            this.originalSource = originalSrc || this.originalSource;
+			this.obj.changed = true;
 
+			this.srcChanged(this.originalSource);
+		}
 
-            // this.configureButton.removeAttribute("disabled");
-            // this.clearButton.removeAttribute("disabled");
-            // this.input.nextElementSibling.innerHTML = obj.name || (obj.src && obj.src.length > 5 ? this.defaultFileName : this.placeholder);
-        }
-        else
-        {
-            // this.configureButton.setAttribute("disabled", true);
-            // this.clearButton.setAttribute("disabled", true);
-            // this.input.nextElementSibling.innerHTML = this.placeholder;
-        }
+		if (changed && callCallback) {
+			this.onChange(this.obj.src);
+		}
 
-    }
+		return changed;
+	}
 
-    updateSrc() {}
+	calculateSize() {
+		if (this.errorLimit) {
+			this.errorLimit.style.display = "none";
+		}
 
-    fileChanged(file) 
-    {
-        var _this = this;
+		if (this.warningLimit) {
+			this.warningLimit.style.display = "none";
+		}
 
-        readFileToBase64(file, function(res) {
+		var sizeInKb = FileBlock.fileSize(
+			this.obj.src || "",
+			this.obj.compareToFileSize !== false
+		);
 
-            _this.obj.src = res;
+		if (sizeInKb > 0) {
+			if (this.errorLimit && sizeInKb > this.obj.errorLimit) {
+				this.errorLimit.style.display = "block";
+			} else if (this.warningLimit && sizeInKb > this.obj.warningLimit) {
+				this.warningLimit.style.display = "block";
+			}
 
-            _this.obj.changed = true;
+			this.html.title = "File size is " + sizeInKb.toFixed(2) + " KB";
+		}
+	}
 
-            _this.onChange(_this.obj.src);
-
-            _this.srcChanged(_this.obj.src);
-        })
-    }
-
-    configure() {}
-
-    change(value, callCallback) 
-    {
-        var changed = false;
-
-        if (value !== undefined) 
-        {
-            if (this.obj.src !== value) 
-            {
-                changed = true;
-            }
-
-            this.obj.src = value;
-        }
-
-        if (this.defaultValue === undefined) this.defaultValue = this.obj.src;
-
-        if (this.originalSource.src !== this.obj.src || changed) 
-        {
-            this.originalSource.src = this.obj.src;
-
-            if (this.obj.data)
-            {
-                this.originalSource.data = this.obj.data;
-            }
-
-            this.obj.changed = true;
-
-            this.srcChanged(this.originalSource);
-        }
-
-        if (changed && callCallback) 
-        {
-            this.onChange(this.obj.src);
-        }
-
-        return changed;
-    }
-
-    calculateSize()
-    {
-        if (this.errorLimit)
-        {
-            this.errorLimit.style.display = "none";
-        }
-
-        if (this.warningLimit)
-        {
-            this.warningLimit.style.display = "none";
-        }
-
-        var sizeInKb = FileBlock.fileSize(this.obj.src || "", this.obj.compareToFileSize !== false);
-
-        if (sizeInKb > 0)
-        {
-            if (this.errorLimit && sizeInKb > this.obj.errorLimit)
-            {
-                this.errorLimit.style.display = "block";
-            }
-            else if (this.warningLimit && sizeInKb > this.obj.warningLimit)
-            {
-                this.warningLimit.style.display = "block";
-            }
-
-
-            this.html.title = "File size is " + sizeInKb.toFixed(2) + " KB";
-        }
-    }
-
-    static getType()
-    {
-        return 'file';
-    }
-
+	static getType() {
+		return "file";
+	}
 }
 
-function readFileToBase64(file, cb) 
-{
-    var reader = new FileReader();
-    reader.onload = function(e) { cb(reader.result) }
-    reader.readAsDataURL(file);
+function readFileToBase64(file, cb) {
+	var reader = new FileReader();
+	reader.onload = function (e) {
+		cb(reader.result);
+	};
+	reader.readAsDataURL(file);
 }
 
-function base64FileSize(src) 
-{
-    var base64Length = src.length - (src.indexOf(',') + 1);
-    var padding = (src.charAt(src.length - 2) === '=') ? 2 : ((src.charAt(src.length - 1) === '=') ? 1 : 0);
-    return base64Length * 0.75 - padding;
+function base64FileSize(src) {
+	var base64Length = src.length - (src.indexOf(",") + 1);
+	var padding =
+		src.charAt(src.length - 2) === "="
+			? 2
+			: src.charAt(src.length - 1) === "="
+			? 1
+			: 0;
+	return base64Length * 0.75 - padding;
 }
 
-
-
-Block.register('file', FileBlock, 'src');
+Block.register("file", FileBlock, "src");

@@ -5,4 +5,4 @@
  */
 import "./scss/index.scss";
 
-export { default } from "./src/configer";
+export { default } from "./configer";

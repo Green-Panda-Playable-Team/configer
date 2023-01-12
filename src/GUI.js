@@ -4,9 +4,9 @@
  * @license      {@link https://legal.ubi.com/privacypolicy/en-INTL}
  */
 
-import RootItemsBlock from './blocks/RootItemsBlock';
-import Parse from './Parse';
-import Snapshot from './Snapshot';
+import RootItemsBlock from "./blocks/RootItemsBlock";
+import Parse from "./Parse";
+import Snapshot from "./Snapshot";
 // const Restore = require('./Restore');
 // const Mixin = require('./Mixin');
 // const GetOption = require('./GetOption');
@@ -22,164 +22,136 @@ import Snapshot from './Snapshot';
 
 const snapshotCache = {};
 
-class GUI 
-{
+class GUI {
+	constructor(id, options) {
+		this.id = id;
 
-    constructor(id, options) 
-    {
-        this.id = id;
+		this.config = options.config;
 
-        this.config = options.config;
+		this.root = null;
 
-        this.root = null;
+		if (typeof options.parent === "string") {
+			this.domElement = document.getElementById(options.parent);
+		} else {
+			this.domElement = options.parent;
+		}
 
-        if (typeof options.parent === "string") 
-        {
-            this.domElement = document.getElementById(options.parent);
-        }
-        else 
-        {
-            this.domElement = options.parent;
-        }
+		// if (this.parent)
+		// {
+		//     this.parent.id = this.id;
+		// }
 
-        // if (this.parent) 
-        // {
-        //     this.parent.id = this.id;
-        // }
+		this.resetButton = options.resetButton === true;
 
-        this.resetButton = options.resetButton === true;
+		if (this.domElement) {
+			this.build(this.config);
+		}
+	}
 
-   
+	// getOption(path)
+	// {
+	//     return GetOption(this.config, path);
+	// }
 
+	// description(snapshot)
+	// {
+	//     return Description(this.config, snapshot);
+	// }
 
-        if (this.domElement) 
-        {
-            this.build(this.config);
-        }
-    }
+	// changed()
+	// {
+	//     return Changed(this.config);
+	// }
 
-    // getOption(path) 
-    // {
-    //     return GetOption(this.config, path);
-    // }
+	// hash()
+	// {
+	//     return Hash(this.config);
+	// }
 
-    // description(snapshot) 
-    // {
-    //     return Description(this.config, snapshot);
-    // }
+	parse(options) {
+		return Parse(this.config, options);
+	}
 
-    // changed() 
-    // {
-    //     return Changed(this.config);
-    // }
+	// snapshot()
+	// {
+	//     return Snapshot(this.config);
+	// }
 
-    // hash() 
-    // {
-    //     return Hash(this.config);
-    // }
+	// mixin(snapshot)
+	// {
+	//     Mixin(this.config, snapshot);
 
-    parse(options) 
-    {
-        return Parse(this.config, options);
-    }
+	//     this.apply();
+	// }
 
-    // snapshot() 
-    // {
-    //     return Snapshot(this.config);
-    // }
+	// restore(parsed)
+	// {
+	//     Restore(this.config, parsed);
 
-    // mixin(snapshot) 
-    // {
-    //     Mixin(this.config, snapshot);
+	//     this.apply();
+	// }
 
-    //     this.apply();
-    // }
+	apply(element, callCallback) {
+		if (element === undefined) {
+			element = this.config;
 
-    // restore(parsed) 
-    // {
-    //     Restore(this.config, parsed);
+			if (callCallback === undefined) {
+				callCallback = true;
+			}
+		}
 
-    //     this.apply();
-    // }
+		element.block &&
+			element.block.apply &&
+			element.block.apply(callCallback);
+	}
 
-    apply(element, callCallback) 
-    {
-        if (element === undefined) 
-        {
-            element = this.config;
+	build(config) {
+		config = config || this.config;
 
-            if (callCallback === undefined) 
-            {
-                callCallback = true;
-            }
-        }
+		this.config = config;
 
-        element.block && element.block.apply && element.block.apply(callCallback);
-    }
+		// if (title === undefined)
+		// {
+		//     title = GPP_TITLE;
+		// }
 
+		this.domElement.innerHTML = "";
 
-    build(config) 
-    {
-        config = config || this.config;
+		if (typeof config === "object") {
+			var rootBlock = (this.root = new RootItemsBlock(this.id, config));
 
-        this.config = config;
+			if (this.resetButton) {
+				if (typeof snapshotCache[this.id] === "undefined") {
+					snapshotCache[this.id] = Snapshot(config);
+				}
 
-        // if (title === undefined) 
-        // {
-        //     title = GPP_TITLE;
-        // }
+				rootBlock.buildResetButton();
+			}
 
-        this.domElement.innerHTML = "";
+			// if (false)
+			// {
+			//     var configPackage = new ConfigPackage(this.id, this.domElement, config);
+			// }
 
-        if (typeof config === "object") 
-        {
-            
+			// if (title)
+			// {
+			//     var title_element = getGlobalTitle(title, rootBlock, resetButton, domElement.id == "playable_view_config");
+			//     domElement.appendChild(title_element);
+			// }
 
-            
-            
-            var rootBlock = this.root = new RootItemsBlock(this.id, config);
+			this.domElement.appendChild(rootBlock.getHTML());
 
-
-            if (this.resetButton) {
-
-                if (typeof snapshotCache[this.id] === "undefined") {
-                    snapshotCache[this.id] = Snapshot(config);
-                }
-                
-
-                rootBlock.buildResetButton()
-
-
-            }
-
-
-            // if (false) 
-            // {
-            //     var configPackage = new ConfigPackage(this.id, this.domElement, config);
-            // }
-
-            // if (title) 
-            // {
-            //     var title_element = getGlobalTitle(title, rootBlock, resetButton, domElement.id == "playable_view_config");
-            //     domElement.appendChild(title_element);
-            // }
-
-
-            this.domElement.appendChild(rootBlock.getHTML());
-
-            // if (false) 
-            // {
-            //     var configSaver = new ConfigSaver(id, parent, config);
-            // }
-        }
-        else 
-        {
-            const emptyListLabel = document.createElement("div");
-            emptyListLabel.className = "cfger-empty-list-label";
-            emptyListLabel.innerText = "No options here";
-            this.domElement.appendChild(emptyListLabel);
-        }
-    }
+			// if (false)
+			// {
+			//     var configSaver = new ConfigSaver(id, parent, config);
+			// }
+		} else {
+			const emptyListLabel = document.createElement("div");
+			emptyListLabel.className = "cfger-empty-list-label";
+			emptyListLabel.innerText = "No options here";
+			this.domElement.appendChild(emptyListLabel);
+		}
+	}
 }
 
 export default GUI;

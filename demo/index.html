@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configer - Demo</title>
+    <link rel="stylesheet" href="../dist/style.css">
+    <script src="../dist/configer.umd.min.js"></script>
+	<style>
+		body {
+			overflow: hidden;
+		}
+	</style>
+</head>
+<body>
+
+    <div style="margin-left: auto; margin-right: auto; margin-top: auto; margin-bottom: auto; max-width: 300px; padding: 10px 25px; border: 1px solid black; border-radius: 5px;">
+        <h3 style="margin: 0; margin-bottom: 20px;">Build Config UI</h3>
+        <div id="config-parent-element">
+
+        </div>
+    </div>
+
+
+    <script>
+    var config = {
+
+	personal: {
+		type: "block",
+		title: "Personal Info",
+		expanded: true,
+		config: {
+
+			name: {
+				type: "text",
+				title: "Your name",
+				value: "Bob",
+			},
+		
+			age: {
+				type: "number",
+				title: "Your age",
+				value: 22,
+			},
+		
+			skill: {
+				type: "select",
+				title: "Choose your skill",
+				options: ["js", "java", "c++"],
+				labels: ["Javascript", "Java", "C++"],
+				value: "js",
+			},
+		
+			color1: {
+				type: "color",
+				title: "Your favorite color",
+				value: {
+					color: "#f21331",
+					alpha: 0.5,
+				}
+			},
+		}
+	},
+	file: {
+		type: "sound",
+		title: "Some sound",
+		src: ""
+	},
+	car: {
+		type: "checkbox",
+		title: "Do you own a car?",
+		value: false,
+	},
+
+	photo: {
+		type: "image",
+		title: "Picture",
+        src: ""
+	},
+	send: {
+		type: "button",
+		title: "SEND",
+		onClick: function () {
+			console.log(configer.parse(config));
+		},
+	},
+};
+
+// build user interface
+var container = document.createElement("div");
+
+document.body.appendChild(container);
+
+var gui = new configer.GUI("new_user_form", {
+	parent: "config-parent-element",
+	config: config,
+});
+
+    </script>
+
+</body>
+</html>

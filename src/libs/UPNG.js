@@ -1,3 +1,5 @@
+import pako from "./pako.es5.min";
+
 var UPNG = {};
 
 UPNG.toRGBA8 = function (out) {

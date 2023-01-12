@@ -126,8 +126,10 @@ input.custom-range {
     width: 50px;
     height: 27px;
     border: 0;
+    appearance: none;
   }
   .color-alpha-btn {
+    display: flex;
     margin-left: 5px;
     padding: 0 0.15rem;
   }
@@ -187,14 +189,4 @@ input.custom-range {
   background-color: #fff;
   border: 1px solid #dddddd;
 
-}
-
-.font-size-icon {
-  background-image: url('./icons/font-size.png');
-  background-repeat: no-repeat;
-  background-size: contain;
-  display: inline-block;
-  height: 20px;
-  vertical-align: middle;
-  width: 20px;
 }

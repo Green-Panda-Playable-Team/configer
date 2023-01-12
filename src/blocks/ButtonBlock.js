@@ -4,85 +4,68 @@
  * @license      {@link https://legal.ubi.com/privacypolicy/en-INTL}
  */
 
-import Block from '../BlockPlugin';
-import GeneralBlock from './GeneralBlock';
+import Block from "../BlockPlugin";
+import GeneralBlock from "./GeneralBlock";
 
-export default class ButtonBlock extends GeneralBlock 
-{
+export default class ButtonBlock extends GeneralBlock {
+	// constructor(parent, name, obj)
+	// {
+	//     super(parent, name, obj);
+	// }
 
-    // constructor(parent, name, obj) 
-    // {
-    //     super(parent, name, obj);
-    // }
+	apply(callCallback) {
+		super.apply();
 
-    apply(callCallback) 
-    {
-        super.apply();
+		if (this.obj.innerHTML) {
+			this.button.innerHTML = this.obj.innerHTML;
+		} else {
+			this.button.innerText =
+				this.obj.title || this.obj.label || "Click me";
+		}
+	}
 
-        if (this.obj.innerHTML) 
-        {
-            this.button.innerHTML = this.obj.innerHTML;
-        } 
-        else 
-        {
-            this.button.innerText = this.obj.title || this.obj.label || "Click me";
-        }
-    }
+	build() {
+		super.build();
 
-    build() {
+		var obj = this.obj;
+		// this.obj.ignore = true;
+		var button = document.createElement("button");
+		button.classList.add("btn");
 
-        super.build();
+		if (obj.bootstrap) {
+			button.classList.add(obj.bootstrap);
+		} else {
+			button.classList.add("btn-info");
+		}
 
-        var obj = this.obj;
+		button.id = this.id;
 
-        var button = document.createElement("button")
-        button.classList.add("btn")
+		button.title = obj.description || "";
 
-        if (obj.bootstrap) 
-        {
-            button.classList.add(obj.bootstrap)
-        } 
-        else 
-        {
-            button.classList.add("btn-info")
-        }
+		if (obj.innerHTML) {
+			button.innerHTML = obj.innerHTML;
+		} else {
+			button.innerText = obj.title || obj.label || "Push me";
+		}
 
-        button.id = this.id
+		button.onclick = function () {
+			if (typeof obj.onChange == "function") obj.onChange.call(obj);
 
-        button.title = obj.description || ""
+			if (typeof obj.onClick == "function") obj.onClick.call(obj);
 
-        if (obj.innerHTML) 
-        {
-            button.innerHTML = obj.innerHTML;
-        } 
-        else 
-        {
-            button.innerText = obj.title || obj.label || "Push me";
-        }
+			if (typeof obj.click == "function") obj.click.call(obj);
+		};
 
-        button.onclick = function() {
-            if (typeof obj.onChange == "function")
-                obj.onChange.call(obj)
+		this.button = this.title = button;
 
-            if (typeof obj.onClick == "function")
-                obj.onClick.call(obj)
+		this.html.style.textAlign = "center";
 
-            if (typeof obj.click == "function")
-                obj.click.call(obj)
-        }
+		this.html.appendChild(button);
+	}
 
-        this.button = this.title = button;
-
-        this.html.style.textAlign = "center";
-
-        this.html.appendChild(button);
-    }
-
-    static getType() 
-    {
-        return 'button';
-    }
-
+	static getType() {
+		return "button";
+	}
 }
 
-Block.register('button', ButtonBlock, 'value');
+Block.register("button", ButtonBlock);

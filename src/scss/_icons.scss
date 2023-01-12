@@ -1,0 +1,65 @@
+@font-face {
+    font-family: 'configer-icons';
+    src:  url('fonts/configer-icons.eot?c0xghw');
+    src:  url('fonts/configer-icons.eot?c0xghw#iefix') format('embedded-opentype'),
+      url('fonts/configer-icons.ttf?c0xghw') format('truetype'),
+      url('fonts/configer-icons.woff?c0xghw') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+  }
+  
+  [class^="cicon-"], [class*=" cicon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'configer-icons' !important;
+    speak: never;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    vertical-align: middle;
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .cicon-arrows-alt:before {
+    content: "\e900";
+  }
+  .cicon-cog:before {
+    content: "\e901";
+  }
+  .cicon-compress:before {
+    content: "\e902";
+  }
+  .cicon-eye:before {
+    content: "\e903";
+  }
+  .cicon-font:before {
+    content: "\e904";
+  }
+  .cicon-pause:before {
+    content: "\e905";
+  }
+  .cicon-play:before {
+    content: "\e906";
+  }
+  .cicon-reply-all:before {
+    content: "\e907";
+  }
+  .cicon-share:before {
+    content: "\e908";
+  }
+  .cicon-sort-down:before {
+    content: "\e909";
+  }
+  .cicon-trash-can:before {
+    content: "\e90a";
+  }
+  .cicon-undo:before {
+    content: "\e90b";
+  }
+  .cicon-upload:before {
+    content: "\e90c";
+  }
+  
