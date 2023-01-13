@@ -1,6 +1,6 @@
 {
-  "name": "configer",
-  "version": "1.1.0",
+  "name": "configer.js",
+  "version": "1.1.1",
   "description": "A graphical user interface builder for different input types",
   "scripts": {
     "build": "rollup --config rollup.config.mjs",
@@ -9,7 +9,8 @@
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "README.md"
   ],
   "module": "dist/configer.esm.min.js",
   "browser": "dist/configer.umd.min.js",
