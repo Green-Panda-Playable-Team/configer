@@ -22,6 +22,46 @@ import Snapshot from "./Snapshot";
 
 const snapshotCache = {};
 
+/**
+ * @function
+ * @name GUI
+ * @memberof configer
+ * @description A class for building GUI from config object.
+ * @param {string} id - GUI id
+ * @param {Object} options
+ * @param {Object} options.config - a config object
+ * @param {string} options.parent - a id of HTML parent element 
+ * @param {boolean} options.resetButton - add config reset button 
+ * @example
+ * 
+var config = {
+	name: {
+		type: "text",
+		title: "Your name",
+		value: "Bob",
+	},
+	
+	age: {
+		type: "number",
+		title: "Your age",
+		value: 22,
+	},
+
+	skill: {
+		type: "select",
+		title: "Choose your skill",
+		options: ["js", "java", "c++"],
+		labels: ["Javascript", "Java", "C++"],
+		value: "js",
+	}
+};
+
+new configer.GUI("parent_element_id", {
+	parent: "config-parent-element",
+	config: config,
+});
+ *
+ */
 class GUI {
 	constructor(id, options) {
 		this.id = id;

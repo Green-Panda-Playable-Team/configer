@@ -112,6 +112,29 @@ var gui = new configer.GUI("new_user_form", {
 	config: config,
 });
 
+
+console.log(JSON.stringify(configer.snapshot({	name: {
+				type: "text",
+				title: "Your name",
+				value: "Bob",
+			},
+		
+			age: {
+				type: "number",
+				title: "Your age",
+				value: 22,
+			},
+		
+			skill: {
+				type: "select",
+				title: "Choose your skill",
+				options: ["js", "java", "c++"],
+				labels: ["Javascript", "Java", "C++"],
+				value: "js",
+			},
+		})));
+
+
     </script>
 
 </body>

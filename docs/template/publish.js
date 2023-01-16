@@ -462,18 +462,6 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
 						var navItem = "";
 						var navItemLink = linkto(method.longname, method.name);
 
-						// Not certain if there is a situation where this is needed anymore
-						// linkto method seems to solve this problem already, but at least this check
-						// will prevent duplicate #'s in links.
-						if (!navItemLink.includes("#." + method.name)) {
-							var strNewLink = ".html#." + method.name;
-
-							navItemLink = navItemLink.replace(
-								".html",
-								strNewLink
-							);
-						}
-
 						navItem += "<li data-type='method'";
 						if (docdash.collapse)
 							navItem += " style='display: none;'";
@@ -622,8 +610,10 @@ function buildNav(members) {
 		),
 		Global: buildMemberNavGlobal(),
 	};
-	// order.forEach((member) => member && (nav += sections[member]));
+	// order.forEach((member) => (nav += sections[member]));
 	nav += sections["Global"];
+	nav += sections["Namespaces"];
+
 	return nav;
 }
 
@@ -897,7 +887,7 @@ exports.publish = function (taffyData, opts, tutorials) {
 	}
 
 	if (members.globals.length) {
-		generate("", "Blocks", [{ kind: "globalobj" }], globalUrl);
+		generate("", "Global", [{ kind: "globalobj" }], globalUrl);
 	}
 
 	// index page displays information from package.json and lists files

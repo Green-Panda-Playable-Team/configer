@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>blocks/DateBlock.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Blocks</h3><ul><li><a href="global.html#banner">banner</a></li><li><a href="global.html#block">block</a></li><li><a href="global.html#button">button</a></li><li><a href="global.html#checkbox">checkbox</a></li><li><a href="global.html#color">color</a></li><li><a href="global.html#data_set">data_set</a></li><li><a href="global.html#date">date</a></li><li><a href="global.html#datetime">datetime</a></li><li><a href="global.html#divider">divider</a></li><li><a href="global.html#file">file</a></li><li><a href="global.html#font">font</a></li><li><a href="global.html#gif_to_spritesheet">gif_to_spritesheet</a></li><li><a href="global.html#image">image</a></li><li><a href="global.html#list">list</a></li><li><a href="global.html#multiselect">multiselect</a></li><li><a href="global.html#number">number</a></li><li><a href="global.html#range">range</a></li><li><a href="global.html#range_set">range_set</a></li><li><a href="global.html#select">select</a></li><li><a href="global.html#sound">sound</a></li><li><a href="global.html#text">text</a></li><li><a href="global.html#textarea">textarea</a></li><li><a href="global.html#title">title</a></li></ul><h3>Namespaces</h3><ul><li><a href="configer.html">configer</a><ul class='methods'><li data-type='method'><a href="configer.html#.GUI">GUI</a></li><li data-type='method'><a href="configer.html#.apply">apply</a></li><li data-type='method'><a href="configer.html#.deepMixin">deepMixin</a></li><li data-type='method'><a href="configer.html#.hash">hash</a></li><li data-type='method'><a href="configer.html#.mixin">mixin</a></li><li data-type='method'><a href="configer.html#.parse">parse</a></li><li data-type='method'><a href="configer.html#.snapshot">snapshot</a></li></ul></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">blocks/DateBlock.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import BlockPlugin from "../BlockPlugin";
+import OptionBlock from "./OptionBlock";
+
+/**
+ * @function
+ * @name date
+ * @description This type of option is intended for specifying the banner with running text. It is a decoration type, and can be used for a more beautiful setting of options.
+ * @param {string} title - message that will be shown to the user as a running text.
+ * @param {string} description - brief description of options, that will be shown when user hover over option
+ * @param {string} value - default value date string of your option.
+ * @param {boolean} oninput - if set to true onChange callback will be triggered oninput otherwise onchange.
+ * @param {Function} onChange - function that will be called when the user changes value of the option
+ * 
+ * @example 
+    DATE: {
+
+        type: "date",
+
+        title: "Birthday:"
+
+        value: "2022-12-10T18:20:04.138Z"
+    }
+ */
+/**
+ * @function
+ * @name datetime
+ * @see date
+ */
+export default class DateBlock extends OptionBlock {
+	// constructor(parent, name, obj)
+	// {
+	//     super(parent, name, obj);
+	// }
+
+	build() {
+		super.build();
+
+		var _this = this;
+
+		if (this.obj.value === undefined) this.obj.value = new Date();
+
+		var input = document.createElement("input");
+		input.id = this.id;
+		input.type = this.obj.type === "datetime" ? "datetime-local" : "date";
+		input.className = "form-control";
+
+		if (this.obj.placeholder) {
+			input.placeholder = this.obj.placeholder;
+		}
+
+		this.input = input;
+
+		this.html.appendChild(input);
+
+		function change() {
+			_this.change(this.valueAsNumber, true);
+		}
+
+		if (this.obj.oninput) {
+			input.oninput = change;
+		} else {
+			input.onchange = change;
+		}
+	}
+
+	change(value, callCallback) {
+		var changed = false;
+
+		var prevValue = this.input.valueAsNumber;
+
+		this.obj.value = new Date(this.obj.value);
+
+		if (value !== undefined) {
+			value = new Date(value);
+
+			if (this.obj.value !== value) {
+				changed = true;
+			}
+
+			this.obj.value = value;
+		}
+
+		if (this.defaultValue === undefined) this.defaultValue = this.obj.value;
+
+		this.input.valueAsNumber = this.obj.value.getTime();
+
+		if (this.input.valueAsNumber !== prevValue || changed) {
+			changed = true;
+			this.obj.changed = true;
+		}
+
+		if (changed &amp;&amp; callCallback) {
+			this.onChange(this.obj.value);
+		}
+
+		return changed;
+	}
+
+	static getType() {
+		return ["date", "date-time"];
+	}
+}
+
+BlockPlugin.register("date", DateBlock, "value");
+BlockPlugin.register("datetime", DateBlock, "value");
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.0</a> on Mon Jan 16 2023 17:36:15 GMT+0200 (Eastern European Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

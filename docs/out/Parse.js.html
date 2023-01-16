@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>Parse.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Blocks</h3><ul><li><a href="global.html#banner">banner</a></li><li><a href="global.html#block">block</a></li><li><a href="global.html#button">button</a></li><li><a href="global.html#checkbox">checkbox</a></li><li><a href="global.html#color">color</a></li><li><a href="global.html#data_set">data_set</a></li><li><a href="global.html#date">date</a></li><li><a href="global.html#datetime">datetime</a></li><li><a href="global.html#divider">divider</a></li><li><a href="global.html#file">file</a></li><li><a href="global.html#font">font</a></li><li><a href="global.html#gif_to_spritesheet">gif_to_spritesheet</a></li><li><a href="global.html#image">image</a></li><li><a href="global.html#list">list</a></li><li><a href="global.html#multiselect">multiselect</a></li><li><a href="global.html#number">number</a></li><li><a href="global.html#range">range</a></li><li><a href="global.html#range_set">range_set</a></li><li><a href="global.html#select">select</a></li><li><a href="global.html#sound">sound</a></li><li><a href="global.html#text">text</a></li><li><a href="global.html#textarea">textarea</a></li><li><a href="global.html#title">title</a></li></ul><h3>Namespaces</h3><ul><li><a href="configer.html">configer</a><ul class='methods'><li data-type='method'><a href="configer.html#.GUI">GUI</a></li><li data-type='method'><a href="configer.html#.apply">apply</a></li><li data-type='method'><a href="configer.html#.deepMixin">deepMixin</a></li><li data-type='method'><a href="configer.html#.hash">hash</a></li><li data-type='method'><a href="configer.html#.mixin">mixin</a></li><li data-type='method'><a href="configer.html#.parse">parse</a></li><li data-type='method'><a href="configer.html#.snapshot">snapshot</a></li></ul></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Parse.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @author       Peter Hutsul &lt;peter@greenpandagames.com>
+ * @copyright    2021 GREEN PANDA GAMES
+ * @license      {@link https://legal.ubi.com/privacypolicy/en-INTL}
+ */
+
+// Parse, configer.parse
+
+import isResource from "./IsResource";
+import isSimple from "./IsSimple";
+import utils from "./utils";
+
+function _applyStringForObject(object, options) {
+	var to_return = {};
+
+	for (var i in object) {
+		if (typeof object[i] === "string") {
+			if (utils.color.isCSS(object[i])) {
+				if (options.convertCSSToHex) {
+					to_return[i] = utils.color.CSSToHex(object[i]);
+				} else {
+					to_return[i] = object[i];
+				}
+			} else {
+				to_return[i] = object[i].replaceAll(
+					"\\\\n",
+					String.fromCharCode(10)
+				);
+			}
+		} else if (typeof object[i] === "object") {
+			if (Array.isArray(object[i])) {
+				to_return[i] = object[i].slice(0);
+			} else {
+				to_return[i] = _applyStringForObject(object[i], options);
+			}
+		} else {
+			to_return[i] = object[i];
+		}
+	}
+
+	return to_return;
+}
+
+function parseResource(config, options) {
+	var ret = void 0;
+
+	if (
+		(options.skipEmptyFiles &amp;&amp; config.src &amp;&amp; config.src.length > 0) ||
+		!options.skipEmptyFiles
+	) {
+		if (options.imageAsValue &amp;&amp; config.type === "image") {
+			ret = config.src;
+		} else {
+			ret = {
+				type: config.type,
+				src: config.src,
+			};
+
+			if (options.includeFileName &amp;&amp; config.name) {
+				ret.name = config.name;
+			}
+
+			if (config.data) {
+				ret.data = config.data;
+			}
+		}
+	}
+
+	return ret;
+}
+
+function parseConfig(config, options) {
+	options = options || {};
+
+	var ret = {};
+	for (var i in config) {
+		if (config[i].ignore) {
+			continue;
+		}
+
+		if (isSimple(config[i].type)) {
+			if (typeof config[i].value === "string") {
+				if (utils.color.isCSS(config[i].value)) {
+					if (options.convertCSSToHex) {
+						ret[i] = utils.color.CSSToHex(config[i].value);
+					} else {
+						ret[i] = config[i].value;
+					}
+				} else {
+					ret[i] = config[i].value.replaceAll(
+						"\\\\n",
+						String.fromCharCode(10)
+					);
+				}
+			} else if (
+				typeof config[i].value === "object" &amp;&amp;
+				!Array.isArray(config[i].value)
+			) {
+				if (Array.isArray(config[i].value)) {
+					ret[i] = config[i].value.slice(0);
+				} else {
+					ret[i] = _applyStringForObject(config[i].value, options);
+				}
+			} else {
+				ret[i] = config[i].value;
+			}
+		} else if (isResource(config[i].type)) {
+			var parsedRes = parseResource(config[i], options);
+
+			if (parsedRes) {
+				ret[i] = parsedRes;
+			}
+		} else if (config[i].type === "list") {
+			ret[i] = [];
+
+			var list = config[i].list;
+			var template = config[i].template;
+
+			if (options.preserveList) {
+				ret[i] = list;
+			} else if (list.length > 0) {
+				var element;
+
+				for (var li = 0; li &lt; list.length; li++) {
+					if (
+						typeof list[li] === "object" &amp;&amp;
+						(list[li].type !== undefined ||
+							(template &amp;&amp; template.type !== undefined))
+					) {
+						var type = list[li].type || template.type;
+
+						if (isSimple(type)) {
+							var elementVal;
+							if (type === "text" || type === "textarea") {
+								elementVal = list[li].value.replaceAll(
+									"\\\\n",
+									String.fromCharCode(10)
+								);
+							} else {
+								elementVal = list[li].value;
+							}
+
+							if (options.valuesList) {
+								element = {
+									value: elementVal,
+								};
+							} else {
+								element = elementVal;
+							}
+						} else if (isResource(type)) {
+							element = parseResource(list[li], options);
+						}
+					} else {
+						element = list[li];
+					}
+
+					ret[i].push(element);
+				}
+			}
+		} else if (config[i].type === "block") {
+			ret[i] = parseConfig(config[i].config, options);
+		} else if (config[i].block &amp;&amp; config[i].block.parse) {
+			var val = config[i].block.parse();
+
+			if (val !== undefined) {
+				ret[i] = val;
+			}
+		}
+	}
+
+	return ret;
+}
+
+/**
+ * @function
+ * @name parse
+ * @memberof configer
+ * @description A method that parses values of config object.
+ * @param {Object} config - a config object
+ * @param {Object} [options] - a object to specify different parse options.
+ * @param {boolean} [options.convertCSSToHex] - convert all color values to Hex.
+ * @param {boolean} [options.skipEmptyFiles] - do not include emply resource values.
+ * @param {boolean} [options.imageAsValue] - all image will be converted to value instead of type and src.
+ * @param {boolean} [options.includeFileName] - include image file name.
+ * @param {boolean} [options.preserveList] - specifies whenever to parse list values.
+ * @param {boolean} [options.valuesList] - all items will be converted to object with property value instead of just value
+ * @returns {Object} Values object parsed from config
+ * @example
+ * 
+var config = {
+	name: {
+		type: "text",
+		title: "Your name",
+		value: "Bob",
+	},
+	
+	age: {
+		type: "number",
+		title: "Your age",
+		value: 22,
+	},
+
+	skill: {
+		type: "select",
+		title: "Choose your skill",
+		options: ["js", "java", "c++"],
+		labels: ["Javascript", "Java", "C++"],
+		value: "js",
+	}
+};
+
+configer.parse(config); // {name: "Bob", age: 22, skill: "js"}
+ *
+ */
+function parse(config, options) {
+	return parseConfig(config, options);
+}
+
+export default parse;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.0</a> on Mon Jan 16 2023 17:36:15 GMT+0200 (Eastern European Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

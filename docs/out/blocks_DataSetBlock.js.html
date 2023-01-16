@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>blocks/DataSetBlock.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Blocks</h3><ul><li><a href="global.html#banner">banner</a></li><li><a href="global.html#block">block</a></li><li><a href="global.html#button">button</a></li><li><a href="global.html#checkbox">checkbox</a></li><li><a href="global.html#color">color</a></li><li><a href="global.html#data_set">data_set</a></li><li><a href="global.html#date">date</a></li><li><a href="global.html#datetime">datetime</a></li><li><a href="global.html#divider">divider</a></li><li><a href="global.html#file">file</a></li><li><a href="global.html#font">font</a></li><li><a href="global.html#gif_to_spritesheet">gif_to_spritesheet</a></li><li><a href="global.html#image">image</a></li><li><a href="global.html#list">list</a></li><li><a href="global.html#multiselect">multiselect</a></li><li><a href="global.html#number">number</a></li><li><a href="global.html#range">range</a></li><li><a href="global.html#range_set">range_set</a></li><li><a href="global.html#select">select</a></li><li><a href="global.html#sound">sound</a></li><li><a href="global.html#text">text</a></li><li><a href="global.html#textarea">textarea</a></li><li><a href="global.html#title">title</a></li></ul><h3>Namespaces</h3><ul><li><a href="configer.html">configer</a><ul class='methods'><li data-type='method'><a href="configer.html#.GUI">GUI</a></li><li data-type='method'><a href="configer.html#.apply">apply</a></li><li data-type='method'><a href="configer.html#.deepMixin">deepMixin</a></li><li data-type='method'><a href="configer.html#.hash">hash</a></li><li data-type='method'><a href="configer.html#.mixin">mixin</a></li><li data-type='method'><a href="configer.html#.parse">parse</a></li><li data-type='method'><a href="configer.html#.snapshot">snapshot</a></li></ul></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">blocks/DataSetBlock.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @author       Peter Hutsul &lt;peter@greenpandagames.com>
+ * @copyright    2021 GREEN PANDA GAMES
+ * @license      {@link https://legal.ubi.com/privacypolicy/en-INTL}
+ */
+
+import Block from "../BlockPlugin";
+import Container from "./Container";
+// import GeneralBlock from './GeneralBlock';
+import utils from "../utils";
+/**
+ * @function
+ * @name data_set
+ * @description This complex type of option is intended for specifining of set of any input field for the user. Supports:
+
+text
+
+number / range
+
+color
+
+checkbox
+
+
+
+
+If you specify min or max property, then number type will be replaced with range type.
+
+If you specify value as "#f42344" - then this option will be built as a color field.
+
+ * @param {string} title - label that will be show next to the option
+ * @param {string} description - brief description of options, that will be shown when user hover over option
+ * @param {object} value - json object format of data set, from which will be built set of fields for the user. You can specify any json object.
+ * @param {number} min - minimum value that user can set for each number type.
+ * @param {number} max - maximum value that user can set for each number type.
+ * @param {number} step - step of increasing or decreasing number for each number type.
+ * @param {number[]} snap - set of numbers to specify points to snap input cursor to these points for each range type.
+ * @param {number} snap_threshold - threshold of value to snap it to set point for each range type.
+ * @param {Function} onChange - function that will be called when the user changes value of the option
+ * 
+ * @example 
+ * TEXT_CONFIGURATION: {
+
+   type: "data_set",
+
+   title: "Logo text configuration",
+
+   value: {
+
+      number: 0, 
+
+      string: "Hello", 
+
+      boolean: true, 
+
+      color: "#1abc9c"
+
+   },
+
+   onChange: function ( value ) {
+
+      console.log( value )
+
+   }
+
+}
+ */
+
+/**
+ * @function
+ * @name range_set
+ * @description This complex type of option is intended for specifining of set of ranges fields for the user.
+ * @param {string} title - label that will be show next to the option
+ * @param {string} description - brief description of options, that will be shown when user hover over option
+ * @param {object} value - json object format of range set, from which will be built set of ranges. You can specify any json object, builder will select only number or object types.
+ * @param {number} min - minimum value that user can set for each number type.
+ * @param {number} max - maximum value that user can set for each number type.
+ * @param {number} step - step of increasing or decreasing number for each number type.
+ * @param {number[]} snap - set of numbers to specify points to snap input cursor to these points for each range type.
+ * @param {number} snap_threshold - threshold of value to snap it to set point for each range type.
+ * @param {Function} onChange - function that will be called when the user changes value of the option
+ * 
+ * @example 
+	LOGO_POSITION: {
+
+		type: "range_set",
+
+		title: "Position of logo",
+
+		value: {
+
+			Portrait: {
+
+				X: 150,
+
+				Y: 100
+
+			},
+
+			Landscape: {
+
+				X: 0,
+
+				Y: 50 
+
+			}
+
+		},
+
+		min: -700,
+
+		max: 700,
+
+		step: 1,
+
+		snap: [0, -100, 100],
+
+		snap_threshold: 10,
+
+		onChange: function ( value ) {
+
+			console.log( value )
+
+		}
+
+	}
+ */
+export default class DataSetBlock extends Container {
+	constructor(id, obj) {
+		super(id, obj, false);
+
+		super.apply();
+
+		if (this.defaultValue === undefined)
+			this.defaultValue = JSON.stringify(this.obj.value);
+	}
+
+	apply(callCallback) {
+		super.apply(callCallback);
+
+		return this.change(void 0, callCallback);
+	}
+
+	setData(value, levels) {
+		levels = levels || [];
+
+		var changed = false;
+
+		for (var key in value) {
+			if (typeof value[key] === "object") {
+				levels.push(key);
+				changed = changed || this.setData(value[key], levels);
+				levels.pop();
+			} else {
+				const id = this.id + "_" + levels.join("_") + "_" + key;
+
+				var input = this.children.find((child) => child.id === id);
+
+				input.obj.min = this.obj.min;
+				input.obj.max = this.obj.max;
+				input.obj.step = this.obj.step;
+				input.obj.value = value[key];
+
+				changed = input.change(void 0, false);
+			}
+		}
+
+		return changed;
+	}
+
+	reset(callCallback) {
+		if (this.defaultValue !== undefined) {
+			return this.change(
+				JSON.parse(this.defaultValue),
+				callCallback !== false
+			);
+		}
+
+		return false;
+	}
+
+	buildHeader() {
+		super.buildHeader();
+
+		var button_reset = document.createElement("button");
+		button_reset.classList.add("cfger-button");
+		button_reset.style.marginRight = "5px";
+		button_reset.title = "Reset to default";
+		button_reset.innerHTML = '&lt;i class="cicon-undo">&lt;/i>';
+		var _this = this;
+
+		button_reset.onclick = function (e) {
+			e.stopPropagation();
+			_this.reset();
+		};
+
+		this.header.insertBefore(button_reset, this.expandButton);
+	}
+
+	build() {
+		super.build();
+
+		var obj = this.obj;
+
+		this.container.style.fontFamily = "monospace";
+
+		var types = {
+			number: "number",
+			boolean: "checkbox",
+			string: "text",
+			color: "color",
+		};
+
+		if (obj.type === "range_set") {
+			obj.min = obj.min || 0;
+			obj.max = obj.max || 0;
+		}
+
+		if (obj.min !== undefined &amp;&amp; obj.max !== undefined) {
+			obj.min = obj.min || 0;
+			obj.max = obj.max || 0;
+
+			types["number"] = "range";
+		}
+
+		if (typeof obj.value !== "object") {
+			if (types["number"] === "range") {
+				obj.value = { x: 0, y: 0 };
+			} else {
+				obj.value = {
+					number: 0,
+					string: "Hello",
+					boolean: true,
+					color: "#1abc9c",
+				};
+			}
+		}
+
+		var object_level = 0,
+			object_level_key = [];
+
+		function globalChange() {
+			obj.changed = true;
+
+			if (typeof obj.onChange === "function") {
+				obj.onChange.call(obj, obj.value);
+			}
+		}
+
+		function buildObject(key, value, object) {
+			if (typeof value === "object") {
+				var element = document.createElement("label");
+				element.id =
+					this.id + "_" + object_level_key.join("_") + "_" + key;
+				element.style.marginLeft = object_level * 10 + "px";
+				element.innerText = key + ":";
+				this.container.appendChild(element);
+
+				object_level += 1;
+				object_level_key.push(key);
+				for (var obj_key in value) {
+					buildObject.call(this, obj_key, value[obj_key], value);
+				}
+
+				object_level -= 1;
+				object_level_key.pop();
+			} else {
+				var blockClasss;
+
+				var fieldType = types[typeof value];
+
+				if (utils.color.isCSS(value)) {
+					fieldType = "color";
+				}
+
+				blockClasss = Block.get(fieldType);
+
+				var input = new blockClasss(
+					this.id + "_" + object_level_key.join("_") + "_" + key,
+					{
+						value: value,
+						type: fieldType,
+						min: obj.min,
+						max: obj.max,
+						step: obj.step,
+						title: key + ":",
+						onChange: function () {
+							object[key] = this.value;
+							globalChange();
+						},
+					}
+				);
+
+				this.children.push(input);
+
+				var inputElement = input.getHTML();
+				inputElement.style.marginLeft = object_level * 10 + "px";
+				inputElement.style.marginBottom = "10px";
+				inputElement.style.justifyContent = "flex-start";
+
+				this.container.appendChild(inputElement);
+			}
+		}
+
+		for (var key in obj.value) {
+			buildObject.call(this, key, obj.value[key], obj.value);
+		}
+	}
+
+	change(value, callCallback) {
+		var changed = false;
+
+		if (value !== undefined) {
+			changed = utils.merge(this.obj.value, value);
+
+			if (changed) {
+				this.setData(this.obj.value);
+			}
+		} else {
+			changed = this.setData(this.obj.value);
+		}
+
+		if (changed &amp;&amp; callCallback) {
+			this.onChange(this.obj.value);
+		}
+
+		return changed;
+	}
+
+	static getType() {
+		return ["data_set", "range_set"];
+	}
+}
+
+Block.register("data_set", DataSetBlock, "value");
+Block.register("range_set", DataSetBlock, "value");
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.0</a> on Mon Jan 16 2023 17:36:15 GMT+0200 (Eastern European Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

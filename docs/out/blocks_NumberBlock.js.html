@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>blocks/NumberBlock.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Blocks</h3><ul><li><a href="global.html#banner">banner</a></li><li><a href="global.html#block">block</a></li><li><a href="global.html#button">button</a></li><li><a href="global.html#checkbox">checkbox</a></li><li><a href="global.html#color">color</a></li><li><a href="global.html#data_set">data_set</a></li><li><a href="global.html#date">date</a></li><li><a href="global.html#datetime">datetime</a></li><li><a href="global.html#divider">divider</a></li><li><a href="global.html#file">file</a></li><li><a href="global.html#font">font</a></li><li><a href="global.html#gif_to_spritesheet">gif_to_spritesheet</a></li><li><a href="global.html#image">image</a></li><li><a href="global.html#list">list</a></li><li><a href="global.html#multiselect">multiselect</a></li><li><a href="global.html#number">number</a></li><li><a href="global.html#range">range</a></li><li><a href="global.html#range_set">range_set</a></li><li><a href="global.html#select">select</a></li><li><a href="global.html#sound">sound</a></li><li><a href="global.html#text">text</a></li><li><a href="global.html#textarea">textarea</a></li><li><a href="global.html#title">title</a></li></ul><h3>Namespaces</h3><ul><li><a href="configer.html">configer</a><ul class='methods'><li data-type='method'><a href="configer.html#.GUI">GUI</a></li><li data-type='method'><a href="configer.html#.apply">apply</a></li><li data-type='method'><a href="configer.html#.deepMixin">deepMixin</a></li><li data-type='method'><a href="configer.html#.hash">hash</a></li><li data-type='method'><a href="configer.html#.mixin">mixin</a></li><li data-type='method'><a href="configer.html#.parse">parse</a></li><li data-type='method'><a href="configer.html#.snapshot">snapshot</a></li></ul></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">blocks/NumberBlock.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @author       Peter Hutsul &lt;peter@greenpandagames.com>
+ * @copyright    2021 GREEN PANDA GAMES
+ * @license      {@link https://legal.ubi.com/privacypolicy/en-INTL}
+ */
+
+import Block from "../BlockPlugin";
+import OptionBlock from "./OptionBlock";
+
+/**
+ * @function
+ * @name number
+ * @description This type of option is intended for specifying of number field for user
+ * @param {string} title - label that will be show next to the option
+ * @param {string} description - brief description of options, that will be shown when user hover over option
+ * @param {number} value - default value of your number option
+ * @param {number} min - minimum value that user can set.
+ * @param {number} max - maximum value that user can set
+ * @param {number} step - step of increasing or decreasing number
+ * @param {Function} onChange - function that will be called when the user changes value of the option
+ * 
+ * @example 
+
+    GAME_DURATION: {
+
+        type: "number",
+
+        title: "Playable duration",
+
+        value: 5,
+
+        min: 3,
+
+        max: 30,
+
+        step: 1,
+
+        onChange: function ( value ) {
+
+            console.log( value )
+
+        }
+    }
+ */
+export default class NumberBlock extends OptionBlock {
+	// constructor(id, obj)
+	// {
+	//     super(id, obj);
+	// }
+
+	build() {
+		super.build();
+
+		var input = document.createElement("input");
+		input.id = this.id;
+		input.type = "number";
+		input.className = "form-control";
+		input.style.width = "150px";
+
+		this.input = input;
+
+		this.html.appendChild(input);
+
+		var _this = this;
+
+		function change() {
+			_this.change(Number(this.value), true);
+		}
+
+		if (this.obj.oninput) {
+			input.oninput = change;
+		} else {
+			input.onchange = change;
+		}
+	}
+
+	change(value, callCallback) {
+		var changed = false;
+
+		var prevValue = this.input.value;
+
+		var obj = this.obj;
+
+		if (value !== undefined) {
+			if (!obj.oninput) {
+				if (typeof obj.min === "number" &amp;&amp; value &lt; obj.min) {
+					value = obj.min;
+				} else if (typeof obj.max === "number" &amp;&amp; value > obj.max) {
+					value = obj.max;
+				}
+			}
+
+			if (obj.value !== value) {
+				changed = true;
+			}
+
+			obj.value = value;
+		}
+
+		this.input.value = "" + obj.value;
+
+		if (typeof obj.min === "number" &amp;&amp; obj.min !== this.input.min)
+			this.input.min = "" + obj.min;
+
+		if (typeof obj.max === "number" &amp;&amp; obj.max !== this.input.max)
+			this.input.max = "" + obj.max;
+
+		if (typeof obj.step === "number" &amp;&amp; obj.step !== this.input.step)
+			this.input.step = "" + obj.step;
+
+		if (typeof obj.max === "number" &amp;&amp; obj.max === obj.min) {
+			this.input.classList.add("cfger-disabled");
+		} else {
+			this.input.classList.remove("cfger-disabled");
+		}
+
+		if (this.input.value !== obj.value) {
+			obj.value = Number(this.input.value);
+		}
+
+		if (this.defaultValue === undefined) this.defaultValue = obj.value;
+		this.input.value = "" + obj.value;
+
+		if (this.input.value !== prevValue || changed) {
+			changed = true;
+			obj.changed = true;
+			this.indicator &amp;&amp; this.indicator.apply();
+		}
+
+		if (changed &amp;&amp; callCallback) {
+			this.onChange(obj.value);
+		}
+
+		return changed;
+	}
+
+	static getType() {
+		return "number";
+	}
+}
+
+Block.register("number", NumberBlock, "value");
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.0</a> on Mon Jan 16 2023 17:36:15 GMT+0200 (Eastern European Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>
