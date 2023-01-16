@@ -349,9 +349,12 @@ footer {
   font-family: Consolas, Monaco, 'Andale Mono', monospace
 }
 
+#Blocks .signature {
+      display: none;
+}
+
 .signature {
     color: #fc83ff;
-    display: none;
 }
 
 .details {
@@ -361,7 +364,7 @@ footer {
   font-size: 14px;
 }
 
-.tag-source {
+#Blocks .tag-source {
   display: none;
 }
 
