@@ -27,8 +27,8 @@ export default class FileBlock extends OptionBlock {
 		return sizeInBytes / 1000;
 	}
 
-	constructor(id, obj) {
-		super(id, obj);
+	constructor(root, id, obj) {
+		super(root, id, obj);
 
 		obj.block.configure = this.configure.bind(this);
 		obj.block.fileChanged = this.fileChanged.bind(this);

@@ -9,9 +9,9 @@ import Container from './Container';
 
 export default class ItemsBlock extends Container {
 
-    constructor(id, obj) 
+    constructor(root, id, obj) 
     {
-        super(id, obj, false);
+        super(root, id, obj, false);
 
         super.apply();
     }
@@ -45,7 +45,7 @@ export default class ItemsBlock extends Container {
             {
                 var blockClass = Block.get(obj.type);
 
-                var objView = new blockClass(this.id + "_" + name, obj);
+                var objView = new blockClass(this.root, this.id + "_" + name, obj);
 
                 this.children.push(objView);
 

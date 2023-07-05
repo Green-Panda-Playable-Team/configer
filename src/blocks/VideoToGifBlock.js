@@ -9,9 +9,9 @@ import VideoBlock from './VideoBlock';
 
 export default class VideoToGifBlock extends VideoBlock
 {
-    constructor(id, obj)
+    constructor(root, id, obj)
     {
-        super(id, obj);
+        super(root, id, obj);
 
         this.lastVideoBase = null;
         this.lastVideoOptions = null;

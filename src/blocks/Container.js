@@ -7,8 +7,8 @@
 import GeneralBlock from "./GeneralBlock";
 
 export default class Container extends GeneralBlock {
-	constructor(id, obj, applyImediately) {
-		super(id, obj, applyImediately);
+	constructor(root, id, obj, applyImediately) {
+		super(root, id, obj, applyImediately);
 
 		obj.block.toggle = this.toggle.bind(this);
 		obj.block.expand = this.expand.bind(this);

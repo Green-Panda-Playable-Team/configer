@@ -9,8 +9,9 @@
 const noop = function () {};
 
 export default class GeneralBlock {
-	constructor(id, obj, applyImediately) {
+	constructor(root, id, obj, applyImediately) {
 		this.id = id;
+		this.root = root;
 		this.obj = obj;
 		this.type = obj.type || null;
 
@@ -23,7 +24,7 @@ export default class GeneralBlock {
 			setTitle: this.setTitle.bind(this),
 			change: (this.change && this.change.bind(this)) || noop,
 			reset: (this.reset && this.reset.bind(this)) || noop,
-			parse: (this.parse && this.parse.bind(this)) || undefined,
+			parse: (this.parse && this.parse.bind(this)) || undefined
 		};
 
 		this.build();
@@ -34,7 +35,7 @@ export default class GeneralBlock {
 	}
 
 	setTitle(title) {
-		this.obj.title = title || "";
+		this.obj.title = title || '';
 
 		this.apply(false);
 
@@ -56,9 +57,9 @@ export default class GeneralBlock {
 	}
 
 	build() {
-		var html = document.createElement("div");
-		html.classList.add("cfger-block");
-		html.id = this.id + "_block";
+		var html = document.createElement('div');
+		html.classList.add('cfger-block');
+		html.id = this.id + '_block';
 
 		if (this.obj.description) {
 			html.title = this.obj.description;
@@ -69,9 +70,9 @@ export default class GeneralBlock {
 
 	disable(is) {
 		if (is) {
-			this.html.classList.add("cfger-disabled");
+			this.html.classList.add('cfger-disabled');
 		} else {
-			this.html.classList.remove("cfger-disabled");
+			this.html.classList.remove('cfger-disabled');
 		}
 	}
 
@@ -82,7 +83,7 @@ export default class GeneralBlock {
 		// }
 		// else
 		// {
-		this.html.style.display = "";
+		this.html.style.display = '';
 		// }
 	}
 
@@ -93,12 +94,12 @@ export default class GeneralBlock {
 		// }
 		// else
 		// {
-		this.html.style.display = "none";
+		this.html.style.display = 'none';
 		// }
 	}
 
 	onChange(a1, a2, a3) {
-		if (typeof this.obj.onChange === "function") {
+		if (typeof this.obj.onChange === 'function') {
 			let temp = arguments.length;
 
 			if (temp === 0) this.obj.onChange.call(this.obj);
@@ -106,6 +107,8 @@ export default class GeneralBlock {
 			else if (temp === 2) this.obj.onChange.call(this.obj, a1, a2);
 			else this.obj.onChange.call(this.obj, a1, a2, a3);
 		}
+		
+		this.root.emit('change', this.obj);
 	}
 
 	static getType() {
@@ -113,9 +116,8 @@ export default class GeneralBlock {
 	}
 
 	static htmlToElement(html) {
-		var template = document.createElement("template");
-		html = html.trim();
-		template.innerHTML = html;
+		var template = document.createElement('template');
+		template.innerHTML = html.trim();
 		return template.content.firstChild;
 	}
 }

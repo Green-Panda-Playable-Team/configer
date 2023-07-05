@@ -15,9 +15,6 @@ function getAudioTypeFromBase64(src) {
 }
 
 export default class SoundBlock extends FileBlock {
-	constructor(id, obj) {
-		super(id, obj);
-	}
 
 	build() {
 		super.build();

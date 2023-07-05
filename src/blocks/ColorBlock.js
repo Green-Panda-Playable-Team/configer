@@ -130,7 +130,7 @@ export default class ColorBlock extends OptionBlock {
 		input_block.className = "color-alpha-input-color-border";
 
 		var input = (this.colorInput = document.createElement("input"));
-		input.id = this.id + "_color_input";
+		input.id = this.id;
 		input.type = this.obj.type;
 		input.value = this.obj.value.color;
 		input.className = "form-control color-alpha-input-color";

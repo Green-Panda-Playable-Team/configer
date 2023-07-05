@@ -4,9 +4,10 @@
  * @license      {@link https://legal.ubi.com/privacypolicy/en-INTL}
  */
 
-import RootItemsBlock from "./blocks/RootItemsBlock";
-import Parse from "./Parse";
-import Snapshot from "./Snapshot";
+import RootItemsBlock from './blocks/RootItemsBlock';
+import Parse from './Parse';
+import Snapshot from './Snapshot';
+import EventTarget from './libs/EventTarget';
 // const Restore = require('./Restore');
 // const Mixin = require('./Mixin');
 // const GetOption = require('./GetOption');
@@ -24,13 +25,16 @@ const snapshotCache = {};
 
 class GUI {
 	constructor(id, options) {
+
+		EventTarget.mixin(this);
+
 		this.id = id;
 
 		this.config = options.config;
 
 		this.root = null;
 
-		if (typeof options.parent === "string") {
+		if (typeof options.parent === 'string') {
 			this.domElement = document.getElementById(options.parent);
 		} else {
 			this.domElement = options.parent;
@@ -100,9 +104,7 @@ class GUI {
 			}
 		}
 
-		element.block &&
-			element.block.apply &&
-			element.block.apply(callCallback);
+		element.block && element.block.apply && element.block.apply(callCallback);
 	}
 
 	build(config) {
@@ -115,13 +117,13 @@ class GUI {
 		//     title = GPP_TITLE;
 		// }
 
-		this.domElement.innerHTML = "";
+		this.domElement.innerHTML = '';
 
-		if (typeof config === "object") {
-			var rootBlock = (this.root = new RootItemsBlock(this.id, config));
+		if (typeof config === 'object') {
+			var rootBlock = (this.root = new RootItemsBlock(this, this.id, config));
 
 			if (this.resetButton) {
-				if (typeof snapshotCache[this.id] === "undefined") {
+				if (typeof snapshotCache[this.id] === 'undefined') {
 					snapshotCache[this.id] = Snapshot(config);
 				}
 
@@ -146,9 +148,9 @@ class GUI {
 			//     var configSaver = new ConfigSaver(id, parent, config);
 			// }
 		} else {
-			const emptyListLabel = document.createElement("div");
-			emptyListLabel.className = "cfger-empty-list-label";
-			emptyListLabel.innerText = "No options here";
+			const emptyListLabel = document.createElement('div');
+			emptyListLabel.className = 'cfger-empty-list-label';
+			emptyListLabel.innerText = 'No options here';
 			this.domElement.appendChild(emptyListLabel);
 		}
 	}

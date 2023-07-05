@@ -62,7 +62,7 @@ export default class ImageBlock extends FileBlock {
 
 		container.append(popover);
 
-		this.gui = new GUI(this.id + "_image_config", {
+		this.guiOptions = new GUI(this.id + "_image_config", {
 			parent: config_block,
 			config: {
 				scale: {
@@ -145,7 +145,7 @@ export default class ImageBlock extends FileBlock {
 
 		reset_btn.onclick = () => {
 			config_btn.hide();
-			this.gui.root.reset(true);
+			this.guiOptions.root.reset(true);
 
 			if (this.obj.type === "gif_to_spritesheet") {
 				this.onGifChanges();
@@ -176,7 +176,7 @@ export default class ImageBlock extends FileBlock {
 	}
 
 	onImageChanges() {
-		var config = this.gui.parse();
+		var config = this.guiOptions.parse();
 
 		Utils.image.loadImage(this.originalSource.src, (img) => {
 			config["image"] = img;
@@ -195,7 +195,7 @@ export default class ImageBlock extends FileBlock {
 	}
 
 	onGifChanges() {
-		var config = this.gui.parse();
+		var config = this.guiOptions.parse();
 
 		Utils.image.loadImage(this.originalSource.src, (img) => {
 			config["image"] = img;
@@ -262,7 +262,7 @@ export default class ImageBlock extends FileBlock {
 	}
 
 	fileChanged(file) {
-		this.gui.root.reset(true);
+		this.guiOptions.root.reset(true);
 
 		this.config_btn.hide();
 

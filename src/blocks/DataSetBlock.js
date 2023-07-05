@@ -4,19 +4,18 @@
  * @license      {@link https://legal.ubi.com/privacypolicy/en-INTL}
  */
 
-import Block from "../BlockPlugin";
-import Container from "./Container";
+import Block from '../BlockPlugin';
+import Container from './Container';
 // import GeneralBlock from './GeneralBlock';
-import utils from "../utils";
+import utils from '../utils';
 
 export default class DataSetBlock extends Container {
-	constructor(id, obj) {
-		super(id, obj, false);
+	constructor(root, id, obj) {
+		super(root, id, obj, false);
 
 		super.apply();
 
-		if (this.defaultValue === undefined)
-			this.defaultValue = JSON.stringify(this.obj.value);
+		if (this.defaultValue === undefined) this.defaultValue = JSON.stringify(this.obj.value);
 	}
 
 	apply(callCallback) {
@@ -31,12 +30,12 @@ export default class DataSetBlock extends Container {
 		var changed = false;
 
 		for (var key in value) {
-			if (typeof value[key] === "object") {
+			if (typeof value[key] === 'object') {
 				levels.push(key);
 				changed = changed || this.setData(value[key], levels);
 				levels.pop();
 			} else {
-				const id = this.id + "_" + levels.join("_") + "_" + key;
+				const id = this.id + '_' + levels.join('_') + '_' + key;
 
 				var input = this.children.find((child) => child.id === id);
 
@@ -54,10 +53,7 @@ export default class DataSetBlock extends Container {
 
 	reset(callCallback) {
 		if (this.defaultValue !== undefined) {
-			return this.change(
-				JSON.parse(this.defaultValue),
-				callCallback !== false
-			);
+			return this.change(JSON.parse(this.defaultValue), callCallback !== false);
 		}
 
 		return false;
@@ -66,10 +62,10 @@ export default class DataSetBlock extends Container {
 	buildHeader() {
 		super.buildHeader();
 
-		var button_reset = document.createElement("button");
-		button_reset.classList.add("cfger-button");
-		button_reset.style.marginRight = "5px";
-		button_reset.title = "Reset to default";
+		var button_reset = document.createElement('button');
+		button_reset.classList.add('cfger-button');
+		button_reset.style.marginRight = '5px';
+		button_reset.title = 'Reset to default';
 		button_reset.innerHTML = '<i class="cicon-undo"></i>';
 		var _this = this;
 
@@ -86,16 +82,16 @@ export default class DataSetBlock extends Container {
 
 		var obj = this.obj;
 
-		this.container.style.fontFamily = "monospace";
+		this.container.style.fontFamily = 'monospace';
 
 		var types = {
-			number: "number",
-			boolean: "checkbox",
-			string: "text",
-			color: "color",
+			number: 'number',
+			boolean: 'checkbox',
+			string: 'text',
+			color: 'color'
 		};
 
-		if (obj.type === "range_set") {
+		if (obj.type === 'range_set') {
 			obj.min = obj.min || 0;
 			obj.max = obj.max || 0;
 		}
@@ -104,18 +100,18 @@ export default class DataSetBlock extends Container {
 			obj.min = obj.min || 0;
 			obj.max = obj.max || 0;
 
-			types["number"] = "range";
+			types['number'] = 'range';
 		}
 
-		if (typeof obj.value !== "object") {
-			if (types["number"] === "range") {
+		if (typeof obj.value !== 'object') {
+			if (types['number'] === 'range') {
 				obj.value = { x: 0, y: 0 };
 			} else {
 				obj.value = {
 					number: 0,
-					string: "Hello",
+					string: 'Hello',
 					boolean: true,
-					color: "#1abc9c",
+					color: '#1abc9c'
 				};
 			}
 		}
@@ -126,18 +122,17 @@ export default class DataSetBlock extends Container {
 		function globalChange() {
 			obj.changed = true;
 
-			if (typeof obj.onChange === "function") {
+			if (typeof obj.onChange === 'function') {
 				obj.onChange.call(obj, obj.value);
 			}
 		}
 
 		function buildObject(key, value, object) {
-			if (typeof value === "object") {
-				var element = document.createElement("label");
-				element.id =
-					this.id + "_" + object_level_key.join("_") + "_" + key;
-				element.style.marginLeft = object_level * 10 + "px";
-				element.innerText = key + ":";
+			if (typeof value === 'object') {
+				var element = document.createElement('label');
+				element.id = this.id + '_' + object_level_key.join('_') + '_' + key;
+				element.style.marginLeft = object_level * 10 + 'px';
+				element.innerText = key + ':';
 				this.container.appendChild(element);
 
 				object_level += 1;
@@ -154,33 +149,34 @@ export default class DataSetBlock extends Container {
 				var fieldType = types[typeof value];
 
 				if (utils.color.isCSS(value)) {
-					fieldType = "color";
+					fieldType = 'color';
 				}
 
 				blockClasss = Block.get(fieldType);
 
 				var input = new blockClasss(
-					this.id + "_" + object_level_key.join("_") + "_" + key,
+					this.root,
+					this.id + '_' + object_level_key.join('_') + '_' + key,
 					{
 						value: value,
 						type: fieldType,
 						min: obj.min,
 						max: obj.max,
 						step: obj.step,
-						title: key + ":",
+						title: key + ':',
 						onChange: function () {
 							object[key] = this.value;
 							globalChange();
-						},
+						}
 					}
 				);
 
 				this.children.push(input);
 
 				var inputElement = input.getHTML();
-				inputElement.style.marginLeft = object_level * 10 + "px";
-				inputElement.style.marginBottom = "10px";
-				inputElement.style.justifyContent = "flex-start";
+				inputElement.style.marginLeft = object_level * 10 + 'px';
+				inputElement.style.marginBottom = '10px';
+				inputElement.style.justifyContent = 'flex-start';
 
 				this.container.appendChild(inputElement);
 			}
@@ -212,9 +208,9 @@ export default class DataSetBlock extends Container {
 	}
 
 	static getType() {
-		return ["data_set", "range_set"];
+		return ['data_set', 'range_set'];
 	}
 }
 
-Block.register("data_set", DataSetBlock, "value");
-Block.register("range_set", DataSetBlock, "value");
+Block.register('data_set', DataSetBlock, 'value');
+Block.register('range_set', DataSetBlock, 'value');

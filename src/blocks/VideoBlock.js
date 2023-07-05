@@ -9,12 +9,6 @@ import FileBlock from './FileBlock';
 
 export default class VideoBlock extends FileBlock
 {
-    constructor(id, obj)
-    {
-        super(id, obj);
-    }
-
-   
     build()
     {
         this.placeholder = "Choose video";

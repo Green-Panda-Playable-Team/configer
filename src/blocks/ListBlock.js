@@ -14,9 +14,9 @@ const noop = function() {};
 export default class ListBlock extends Container {
 
 
-    constructor(id, obj) 
+    constructor(root, id, obj) 
     {
-        super(id, obj);
+        super(root, id, obj);
 
         obj.refresh = this.refresh.bind(this);
         obj.add = this.add.bind(this);
@@ -129,7 +129,7 @@ export default class ListBlock extends Container {
                     item.title = item.title.replaceAll("{N}", i + 1);
                 }
 
-                var block = new (Block.get(type))(itemId, item);
+                var block = new (Block.get(type))(this.root, itemId, item);
                 var blockHTML = block.getHTML();
                 this.container.appendChild(blockHTML);
 
