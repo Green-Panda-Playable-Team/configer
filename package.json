@@ -1,6 +1,6 @@
 {
   "name": "configer.js",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "A graphical user interface builder for different input types",
   "scripts": {
     "build": "rollup --config rollup.config.mjs",
