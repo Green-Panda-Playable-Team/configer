@@ -27,7 +27,7 @@ export default class SelectBlock extends OptionBlock
         obj.value = (typeof obj.value === "undefined" ? obj.options[0] : obj.value);
 
         var isNumbers = true;
-        for (var i in obj.options) 
+        for (let i in obj.options) 
         {
             if (typeof obj.options[i] !== "number") 
             {
@@ -43,7 +43,7 @@ export default class SelectBlock extends OptionBlock
         input.value = obj.value;
         input.className = "form-select form-select-sm";
 
-        for (var t in obj.options) 
+        for (let t in obj.options) 
         {
             var value = obj.options[t];
             var text = obj.labels[t] || value;

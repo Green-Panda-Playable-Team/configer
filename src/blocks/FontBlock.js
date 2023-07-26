@@ -435,7 +435,7 @@ export default class FontBlock extends OptionBlock {
 				: valueObj[id];
 
 		var isNumbers = true;
-		for (var i in config.options) {
+		for (let i in config.options) {
 			if (typeof config.options[i] !== "number") {
 				isNumbers = false;
 				break;
@@ -446,7 +446,7 @@ export default class FontBlock extends OptionBlock {
 		input.value = valueObj[id];
 		input.className = "form-select form-select-sm";
 
-		for (var t in config.options) {
+		for (let t in config.options) {
 			var value = config.options[t];
 			var text = config.labels[t] || value;
 

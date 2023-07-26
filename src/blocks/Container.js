@@ -34,7 +34,7 @@ export default class Container extends GeneralBlock {
 	reset(callCallback) {
 		var changed = false;
 
-		for (var i = 0; i < this.children.length; i++) {
+		for (let i = 0; i < this.children.length; i++) {
 			if (this.children[i].reset) {
 				changed = this.children[i].reset(callCallback) || changed;
 			}

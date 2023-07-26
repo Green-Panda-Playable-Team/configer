@@ -3,7 +3,7 @@
 
 function deepMixin(target, source) {
     if (source && typeof target === "object") {
-        for (var key, keys = Object.keys(source), l = keys.length; l--;) {
+        for (let key, keys = Object.keys(source), l = keys.length; l--;) {
             key = keys[l];
 
             if (typeof source[key] === "object" && !Array.isArray(source[key])) {
@@ -37,7 +37,7 @@ function mixin(target, source)
 
 	var obj;
 
-	for (var key in source) 
+	for (let key in source) 
 	{
 		obj = source[key];
 
@@ -45,7 +45,7 @@ function mixin(target, source)
 		{
 			if (typeof obj === "object") 
 			{
-				for (var props in obj) 
+				for (let props in obj) 
 				{
 					if (props === "config" && target[key].type === "block") 
 					{

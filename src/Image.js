@@ -57,11 +57,11 @@ function b64toBlob(b64Data, contentType, sliceSize) {
     var byteCharacters = atob(b64Data);
     var byteArrays = [];
 
-    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
         var slice = byteCharacters.slice(offset, offset + sliceSize);
 
         var byteNumbers = new Array(slice.length);
-        for (var i = 0; i < slice.length; i++) {
+        for (let i = 0; i < slice.length; i++) {
             byteNumbers[i] = slice.charCodeAt(i);
         }
 
@@ -127,7 +127,7 @@ const ImageUtils = {
     {
         if (typeof data === "string" && !this.checkIfBase64(data)) 
         {
-            for (var s in signatures) 
+            for (let s in signatures) 
             {
                 if (data.indexOf(s) === 0) 
                 {
@@ -178,7 +178,7 @@ const ImageUtils = {
         }
         else if (this.checkIfClearBase64(image)) 
         {
-            for (var s in signatures) 
+            for (let s in signatures) 
             {
                 if (image.indexOf(s) === 0) 
                 {
@@ -226,7 +226,7 @@ const ImageUtils = {
                 delays: []
             }
 
-            for (var i = 0; i < 100; i++) 
+            for (let i = 0; i < 100; i++) 
             {
                 info.delays.push(80)
             }
@@ -305,7 +305,7 @@ const ImageUtils = {
                 frames_count: 0,
                 delays: []
             }
-            for (var i = 0; i < d.length; i++) {
+            for (let i = 0; i < d.length; i++) {
                 // bin += String.fromCharCode( d[i] )
             
                 if (d[i] === 0x21 

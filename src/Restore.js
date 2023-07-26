@@ -13,7 +13,7 @@ module.exports = function(reference, parsed)
 
 	var obj;
 
-	for (var key in parsed) 
+	for (let key in parsed) 
 	{
 		obj = parsed[key];
 

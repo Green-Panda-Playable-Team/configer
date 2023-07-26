@@ -66,7 +66,7 @@ export default class ExpandedPreview {
 			? parent.obj.preview_height + "px"
 			: "";
 
-		for (var t in obj.options) {
+		for (let t in obj.options) {
 			var preview = document.createElement("div");
 			preview.id = parent.id + "_expreview";
 			preview.className = "select-preview";
@@ -106,7 +106,7 @@ export default class ExpandedPreview {
 				this.parent.obj.value
 			);
 
-			for (var i = 0; i < this.body.children.length; i++) {
+			for (let i = 0; i < this.body.children.length; i++) {
 				this.body.children[i].classList.remove("selected");
 			}
 

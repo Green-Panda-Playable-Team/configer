@@ -14,7 +14,7 @@ function _applyStringForObject(object, options)
 {
 	var to_return = {};
 
-	for (var i in object)
+	for (let i in object)
 	{
 		if (typeof object[i] === "string")
 		{
@@ -90,7 +90,7 @@ function parseConfig(config, options)
 	options = options || {};
 
     var ret = {};
-    for (var i in config) 
+    for (let i in config) 
     {
         if (config[i].ignore) 
         {
@@ -157,7 +157,7 @@ function parseConfig(config, options)
         	{
         		var element;
 
-	        	for (var li = 0; li < list.length; li++) 
+	        	for (let li = 0; li < list.length; li++) 
 	        	{
 	        		if (typeof list[li] === "object" && (list[li].type !== undefined || (template && template.type !== undefined))) 
 	        		{

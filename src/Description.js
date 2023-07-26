@@ -10,7 +10,7 @@ function parseConfigForTitle(reference, snapshot, titles, title)
 
 	snapshot = snapshot || reference;
 
-	for (var i in reference) 
+	for (let i in reference) 
 	{
 
 		if (reference[i].ignore) 

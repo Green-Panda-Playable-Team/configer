@@ -29,7 +29,7 @@ export default class DataSetBlock extends Container {
 
 		var changed = false;
 
-		for (var key in value) {
+		for (let key in value) {
 			if (typeof value[key] === 'object') {
 				levels.push(key);
 				changed = changed || this.setData(value[key], levels);
@@ -137,7 +137,7 @@ export default class DataSetBlock extends Container {
 
 				object_level += 1;
 				object_level_key.push(key);
-				for (var obj_key in value) {
+				for (let obj_key in value) {
 					buildObject.call(this, obj_key, value[obj_key], value);
 				}
 
@@ -182,7 +182,7 @@ export default class DataSetBlock extends Container {
 			}
 		}
 
-		for (var key in obj.value) {
+		for (let key in obj.value) {
 			buildObject.call(this, key, obj.value[key], obj.value);
 		}
 	}

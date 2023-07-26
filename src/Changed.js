@@ -6,7 +6,7 @@ function wasConfigChanged(config)
 {
     var changed = false;
 
-    for (var i in config) 
+    for (let i in config) 
     {
         if (isSimple(config[i].type) || isResource(config[i].type) || config[i].type === "list") 
         {

@@ -208,7 +208,7 @@ export default class ImageBlock extends FileBlock {
 						JSON.stringify(this.obj.data || [])
 					);
 
-					for (var i in framesToChange) {
+					for (let i in framesToChange) {
 						framesToChange[i].x = Math.floor(
 							framesToChange[i].x * scale
 						);
@@ -276,7 +276,7 @@ export default class ImageBlock extends FileBlock {
 							(resultBase64, resultFrames) => {
 								this.obj.src = resultBase64;
 
-								for (var i in resultFrames) {
+								for (let i in resultFrames) {
 									resultFrames[i].x = Math.floor(
 										resultFrames[i].x
 									);

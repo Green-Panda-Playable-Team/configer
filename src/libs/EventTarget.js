@@ -41,14 +41,14 @@ const EventTarget = {
             if (!fn) {
                 fnArray.length = 0;
             } else if (!context) {
-                for (var i = 0; i < fnArray.length; i += 3) {
+                for (let i = 0; i < fnArray.length; i += 3) {
                     if (fnArray[i] == fn) {
                         fnArray.splice(i, 3);
                         i -= 3;
                     }
                 }
             } else {
-                for (var i = 0; i < fnArray.length; i += 3) {
+                for (let i = 0; i < fnArray.length; i += 3) {
                     if (fnArray[i] == fn && fnArray[i + 1] == context) {
                         fnArray.splice(i, 3);
                         i -= 3;
@@ -72,7 +72,7 @@ const EventTarget = {
             var len = arguments.length;
             var fn, ctx;
 
-            for (var i = 0; i < fnArray.length - listeners.n; i += 3) {
+            for (let i = 0; i < fnArray.length - listeners.n; i += 3) {
                 fn = fnArray[i];
                 ctx = fnArray[i + 1];
 

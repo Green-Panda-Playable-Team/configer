@@ -37,7 +37,7 @@ export default class ItemsBlock extends Container {
             options = this.obj.config || {};
         }
 
-        for (var name in options) 
+        for (let name in options) 
         {
             var obj = options[name];
 

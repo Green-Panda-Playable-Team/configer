@@ -26,7 +26,7 @@ export default class MultiSelectBlock extends OptionBlock
         obj.value = (typeof obj.value === "undefined" ? [obj.options[0]] : obj.value);
 
         var isNumbers = true;
-        for (var i in obj.options) 
+        for (let i in obj.options) 
         {
             if (typeof obj.options[i] !== "number") 
             {
@@ -50,7 +50,7 @@ export default class MultiSelectBlock extends OptionBlock
         this.selectedTexts = obj.selectedTexts = [];
         this.selectedIndexes = obj.selectedIndexes = [];
 
-        for (var t in obj.options) 
+        for (let t in obj.options) 
         {
             var value = obj.options[t];
             var text = obj.labels[t] || value;
@@ -75,7 +75,7 @@ export default class MultiSelectBlock extends OptionBlock
             var values = [];
             var selectedOptions = this.selectedOptions;
 
-            for (var i = 0; i < selectedOptions.length; i++) 
+            for (let i = 0; i < selectedOptions.length; i++) 
             {
                 if (isNumbers) 
                 {
@@ -104,7 +104,7 @@ export default class MultiSelectBlock extends OptionBlock
         this.selectedTexts = [];
         this.selectedIndexes = [];
 
-        for (var i = 0; i < options.length; i++) 
+        for (let i = 0; i < options.length; i++) 
         {
             if (this.isNumbers) 
             {
@@ -158,7 +158,7 @@ export default class MultiSelectBlock extends OptionBlock
             this.obj.value = value.slice(0);
         }
 
-        for (var i = 0; i < this.obj.value.length; i++) 
+        for (let i = 0; i < this.obj.value.length; i++) 
         {
             if (this.obj.options.indexOf(this.obj.value[i]) === -1) 
             {

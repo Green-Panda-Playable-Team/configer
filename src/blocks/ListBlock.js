@@ -100,13 +100,13 @@ export default class ListBlock extends Container {
 
             var itemId, option, listItem, item, type;
 
-            for (var i = 0; i < list.length; i++) 
+            for (let i = 0; i < list.length; i++) 
             {
                 listItem = list[i];
 
                 item = JSON.parse(JSON.stringify(template));
 
-                for (var ky in template) 
+                for (let ky in template) 
                 {
                     if (typeof template[ky] === "function") 
                     {

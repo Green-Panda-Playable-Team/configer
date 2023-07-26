@@ -12,7 +12,7 @@ function merge(original, source)
 
     if (source) 
     {
-        for (var key, keys = Object.keys(source), l = keys.length; l--;) 
+        for (let key, keys = Object.keys(source), l = keys.length; l--;) 
         {
             key = keys[l];
 
@@ -32,7 +32,7 @@ function merge(original, source)
                         {
                             if (original[key].length === source[key].length) 
                             {
-                                for (var i = 0; i < original[key].length; i++) 
+                                for (let i = 0; i < original[key].length; i++) 
                                 {
                                     if (original[key][i] !== source[key][i]) 
                                     {
